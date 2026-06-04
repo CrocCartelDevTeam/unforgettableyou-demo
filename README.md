@@ -46,11 +46,37 @@ python -m http.server 8777
 
 ## Deploy
 
-Static site — deploys instantly to Vercel:
+This is a static site (no build step), so it deploys anywhere. Pick one:
+
+### Option A — GitHub Pages (auto-deploy, free, gives a URL)
+
+A workflow at `.github/workflows/deploy.yml` deploys on every push to `main`.
+
+1. Create a repo on GitHub and push this folder (see commands below).
+2. Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. Push to `main`. The live URL appears in the Actions run summary and on the
+   Pages settings screen (`https://<user>.github.io/<repo>/`).
+
+> Note: free GitHub Pages serves from **public** repos. For a **private** repo
+> with a public URL, use Netlify or Vercel below (both deploy private repos free).
+
+```bash
+git remote add origin https://github.com/<user>/<repo>.git
+git push -u origin main
+```
+
+### Option B — Netlify (private repo OK)
+
+- Fastest: drag this folder onto <https://app.netlify.com/drop>, or
+- Connect the repo in the Netlify UI — `netlify.toml` configures everything.
+
+### Option C — Vercel (private repo OK)
 
 ```bash
 npx vercel --prod
 ```
+
+`vercel.json` handles clean URLs and asset caching.
 
 ## Credits
 
