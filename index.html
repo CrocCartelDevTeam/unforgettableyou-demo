@@ -94,7 +94,7 @@
 
     <div class="story__grid">
       <div class="story__media reveal">
-        <div class="story__photo">
+        <div class="story__photo" data-photo="story1">
           <span class="photo-placeholder" data-i18n="ph.addPhoto">Add your photo</span>
           <span class="frame-cap" data-i18n="cap.firstPhoto">Their first photograph together</span>
         </div>
@@ -305,23 +305,23 @@
     </div>
 
     <div class="gallery__grid">
-      <figure class="gallery__item gallery__item--tall reveal">
+      <figure class="gallery__item gallery__item--tall reveal" data-photo="g1">
         <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
         <span class="frame-cap" data-i18n="cap.telaviv">Tel Aviv, 2012</span>
       </figure>
-      <figure class="gallery__item reveal" style="--d:.05s">
+      <figure class="gallery__item reveal" style="--d:.05s" data-photo="g2">
         <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
         <span class="frame-cap" data-i18n="cap.besor">The Besor River</span>
       </figure>
-      <figure class="gallery__item reveal" style="--d:.1s">
+      <figure class="gallery__item reveal" style="--d:.1s" data-photo="g3">
         <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
         <span class="frame-cap" data-i18n="cap.london">London, June 2012</span>
       </figure>
-      <figure class="gallery__item gallery__item--wide reveal" style="--d:.15s">
+      <figure class="gallery__item gallery__item--wide reveal" style="--d:.15s" data-photo="g4">
         <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
         <span class="frame-cap" data-i18n="cap.la">Summer in Los Angeles</span>
       </figure>
-      <figure class="gallery__item reveal" style="--d:.2s">
+      <figure class="gallery__item reveal" style="--d:.2s" data-photo="g5">
         <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
         <span class="frame-cap" data-i18n="cap.family">Family</span>
       </figure>
@@ -403,5 +403,6 @@
 
   <script src="assets/js/i18n.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/edit-mode.js"></script>
 </body>
 </html>

@@ -193,18 +193,35 @@
 
   var STORAGE_KEY = "uy_lang";
 
+  function applyPhotos() {
+    var photos = window.UY_PHOTOS || {};
+    document.querySelectorAll("[data-photo]").forEach(function (el) {
+      var k = el.getAttribute("data-photo");
+      if (photos[k]) {
+        el.style.backgroundImage = "url(" + photos[k] + ")";
+        el.classList.add("has-photo");
+      } else {
+        el.style.backgroundImage = "";
+        el.classList.remove("has-photo");
+      }
+    });
+  }
+
   function apply(lang) {
     if (!T[lang]) lang = "en";
     var dict = T[lang];
     var doc = document.documentElement;
+    var ov = (window.UY_OVERRIDES && window.UY_OVERRIDES[lang]) || {};
 
     doc.setAttribute("lang", lang);
     doc.setAttribute("dir", lang === "he" ? "rtl" : "ltr");
 
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
-      if (dict[key] != null) el.innerHTML = dict[key];
+      var val = (ov[key] != null) ? ov[key] : dict[key];
+      if (val != null) el.innerHTML = val;
     });
+    applyPhotos();
 
     // Reflect active state on the toggle
     document.querySelectorAll(".lang-toggle__opt").forEach(function (opt) {
@@ -217,6 +234,9 @@
   }
 
   function init() {
+    try { window.UY_OVERRIDES = JSON.parse(localStorage.getItem("uy_overrides") || "{}"); } catch (e) { window.UY_OVERRIDES = {}; }
+    try { window.UY_PHOTOS = JSON.parse(localStorage.getItem("uy_photos") || "{}"); } catch (e) { window.UY_PHOTOS = {}; }
+
     var saved = "en";
     try { saved = localStorage.getItem(STORAGE_KEY) || "en"; } catch (e) {}
     apply(saved);
@@ -229,8 +249,8 @@
     }
   }
 
-  // Expose for other scripts
-  window.UY_I18N = { apply: apply, dict: T };
+  // Expose for other scripts (edit mode, etc.)
+  window.UY_I18N = { apply: apply, dict: T, applyPhotos: applyPhotos };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

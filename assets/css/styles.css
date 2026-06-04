@@ -444,6 +444,75 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =========================================================
+   Photos filled via Edit Mode
+   ========================================================= */
+.story__photo.has-photo,
+.gallery__item.has-photo { background-size: cover; background-position: center; }
+.story__photo.has-photo .photo-placeholder,
+.gallery__item.has-photo .photo-placeholder { display: none; }
+
+/* =========================================================
+   Edit Mode (demo) — large, friendly controls for 80+ users
+   ========================================================= */
+.uy-edit-launch {
+  position: fixed; right: 1.4rem; bottom: 1.4rem; z-index: 940;
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: var(--gold); color: var(--navy);
+  border: 0; cursor: pointer; border-radius: 999px;
+  padding: .9rem 1.4rem; font-family: var(--sans); font-weight: 500;
+  font-size: 1rem; letter-spacing: .02em;
+  box-shadow: 0 18px 40px -16px rgba(20,27,46,.6);
+  transition: transform .3s var(--ease), background .3s var(--ease);
+}
+.uy-edit-launch:hover { transform: translateY(-2px); background: var(--gold-bright); }
+.uy-edit-launch__icon { font-size: 1.15rem; }
+
+.uy-edit-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 945;
+  display: none; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: var(--navy); color: var(--cream);
+  border-top: 2px solid var(--gold);
+  padding: 1rem clamp(1rem, 4vw, 2.5rem);
+  box-shadow: 0 -16px 40px -20px rgba(0,0,0,.6);
+}
+body.uy-editing .uy-edit-bar { display: flex; }
+.uy-edit-bar__msg { flex: 1; min-width: 240px; font-size: 1rem; line-height: 1.55; color: rgba(247,241,232,.9); }
+.uy-edit-bar__msg strong { color: var(--gold-bright); font-weight: 600; }
+.uy-edit-bar__actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+.uy-edit-btn {
+  background: transparent; color: var(--cream);
+  border: 1px solid rgba(247,241,232,.4); cursor: pointer;
+  border-radius: 4px; padding: .75rem 1.25rem; font-family: var(--sans);
+  font-size: 1rem; transition: all .25s var(--ease);
+}
+.uy-edit-btn:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+.uy-edit-btn--primary { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 500; }
+.uy-edit-btn--primary:hover { background: var(--gold-bright); color: var(--navy); }
+
+/* Highlight what can be edited */
+body.uy-editing [contenteditable="true"] {
+  outline: 2px dashed rgba(176,141,87,.55); outline-offset: 4px;
+  border-radius: 3px; cursor: text; transition: outline-color .2s var(--ease);
+}
+body.uy-editing [contenteditable="true"]:hover { outline-color: var(--gold-bright); }
+body.uy-editing [contenteditable="true"]:focus { outline: 2px solid var(--gold-bright); background: rgba(176,141,87,.08); }
+
+/* Per-photo edit controls */
+.uy-photo-tools {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap;
+  background: rgba(20,27,46,.45); backdrop-filter: blur(2px);
+}
+.uy-photo-btn {
+  background: var(--gold); color: var(--navy); border: 0; cursor: pointer;
+  border-radius: 4px; padding: .7rem 1.1rem; font-family: var(--sans);
+  font-size: .95rem; font-weight: 500; transition: background .25s var(--ease);
+}
+.uy-photo-btn:hover { background: var(--gold-bright); }
+.uy-photo-btn--ghost { background: rgba(247,241,232,.92); color: var(--navy); }
+[dir="rtl"] .uy-edit-launch { right: auto; left: 1.4rem; }
+
+/* =========================================================
    Hebrew typography + RTL
    ========================================================= */
 html[lang="he"] {
