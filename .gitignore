@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Deploy / tooling
+.vercel/
+.netlify/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Local server artifacts
+__pycache__/

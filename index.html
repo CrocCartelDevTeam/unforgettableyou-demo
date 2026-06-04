@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Unforgettable You — the love story and life of Racheli & Zvika, preserved forever. A timeless digital memoir." />
+  <title>Unforgettable You · Racheli & Zvika</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- English: Cormorant + Jost · Hebrew: Frank Ruhl Libre + Heebo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&family=Frank+Ruhl+Libre:wght@400;500;700&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='86'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+  <!-- Page load curtain -->
+  <div class="loader" id="loader">
+    <div class="loader__inner">
+      <span class="loader__script">Unforgettable</span>
+      <span class="loader__sub">YOU</span>
+    </div>
+  </div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__brand">
+      <span class="nav__brand-script">Unforgettable</span>
+      <span class="nav__brand-mark">YOU</span>
+    </a>
+    <nav class="nav__links" id="navLinks">
+      <a href="#story" class="nav__link" data-i18n="nav.story">Our Story</a>
+      <a href="#timeline" class="nav__link" data-i18n="nav.journey">The Journey</a>
+      <a href="#memoir" class="nav__link" data-i18n="nav.memoir">Zvika's Memoir</a>
+      <a href="#gallery" class="nav__link" data-i18n="nav.gallery">Gallery</a>
+      <a href="#legacy" class="nav__link" data-i18n="nav.legacy">Legacy</a>
+      <a href="#contact" class="nav__link nav__link--cta" data-i18n="nav.cta">Preserve a Story</a>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">
+        <span class="lang-toggle__opt" data-lang="en">EN</span>
+        <span class="lang-toggle__sep">/</span>
+        <span class="lang-toggle__opt" data-lang="he">עב</span>
+      </button>
+    </nav>
+    <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="hero__bg" aria-hidden="true">
+      <canvas class="hero__canvas" id="heroCanvas"></canvas>
+      <div class="hero__bg-layer hero__bg-layer--fallback"></div>
+      <div class="hero__bg-layer hero__bg-layer--2"></div>
+      <div class="hero__grain"></div>
+    </div>
+
+    <div class="hero__content">
+      <p class="hero__eyebrow reveal" data-i18n="hero.eyebrow">A Love Story · Written Across Continents</p>
+      <h1 class="hero__title">
+        <span class="reveal" style="--d:.1s" data-i18n="hero.name1">Racheli</span>
+        <span class="hero__amp reveal" style="--d:.25s">&amp;</span>
+        <span class="reveal" style="--d:.4s" data-i18n="hero.name2">Zvika</span>
+      </h1>
+      <p class="hero__lede reveal" style="--d:.6s" data-i18n="hero.lede">
+        Two lives shaped by history, separated by oceans, and joined by a single
+        phone call in the winter of 2012. This is their story — and it deserves
+        to be unforgettable.
+      </p>
+      <div class="hero__actions reveal" style="--d:.8s">
+        <a href="#story" class="btn btn--solid" data-i18n="hero.cta1">Read Their Story</a>
+        <a href="#timeline" class="btn btn--ghost" data-i18n="hero.cta2">Explore the Journey</a>
+      </div>
+    </div>
+
+    <a href="#story" class="hero__scroll" aria-label="Scroll down">
+      <span class="hero__scroll-line"></span>
+      <span class="hero__scroll-text" data-i18n="hero.scroll">Scroll</span>
+    </a>
+  </section>
+
+  <!-- Intro / How We Met -->
+  <section class="story section" id="story">
+    <div class="section__head reveal">
+      <span class="section__kicker" data-i18n="story.kicker">Chapter One</span>
+      <h2 class="section__title" data-i18n="story.title">How We Met</h2>
+      <p class="section__sub" data-i18n="story.sub">Tel Aviv · February 2012</p>
+    </div>
+
+    <div class="story__grid">
+      <div class="story__media reveal">
+        <div class="story__photo">
+          <span class="photo-placeholder" data-i18n="ph.addPhoto">Add your photo</span>
+          <span class="frame-cap" data-i18n="cap.firstPhoto">Their first photograph together</span>
+        </div>
+        <div class="story__stamp" data-i18n="story.stamp">Est. 2012</div>
+      </div>
+
+      <div class="story__text reveal" style="--d:.15s">
+        <p class="story__dropcap" data-i18n="story.p1">
+          We met through an Israeli website called <em>Nifgashim</em>. Our first
+          phone call was on Monday, February 27, 2012. At the end of that call,
+          Racheli invited Zvika to meet two days later in her apartment in Tel Aviv.
+        </p>
+        <p data-i18n="story.p2">
+          On Friday evening we drove to a quiet Italian restaurant called Francesca,
+          near the beach in Rishon-LeZion, where we could talk and truly get to know
+          one another. Zvika spoke of his early life, and Racheli was moved by his
+          story. That evening, we formed the first emotional bond — and decided to
+          keep meeting.
+        </p>
+        <p data-i18n="story.p3">
+          We took our first trip into nature soon after, to the Besor River near
+          Be'er Sheva. We found a quiet green patch, sat with a picnic basket, and
+          felt the pull of something far greater than ourselves. From there, our
+          relationship deepened week after week, full of adventure.
+        </p>
+        <blockquote class="pullquote" data-i18n="story.quote">
+          “We both knew we wanted to share our lives between Israel and California —
+          a love with two homes and no borders.”
+        </blockquote>
+        <p data-i18n="story.p4">
+          In mid-May we moved in together in Tel Aviv. In June we flew to London to
+          stay with our friend Dorothy, then on to Los Angeles, where we spent a
+          summer we still call <strong>our honeymoon</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="timeline section section--dark" id="timeline">
+    <div class="section__head reveal">
+      <span class="section__kicker section__kicker--light" data-i18n="tl.kicker">Chapter Two</span>
+      <h2 class="section__title" data-i18n="tl.title">The Journey</h2>
+      <p class="section__sub section__sub--light" data-i18n="tl.sub">Milestones of a shared life</p>
+    </div>
+
+    <ol class="tl">
+      <li class="tl__item reveal">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__date" data-i18n="tl.d1">Feb 27, 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t1">The First Call</h3>
+          <p data-i18n="tl.b1">A single phone call through Nifgashim that would change everything.</p>
+        </div>
+      </li>
+      <li class="tl__item reveal" style="--d:.1s">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__date" data-i18n="tl.d2">Feb 29, 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t2">First Meeting</h3>
+          <p data-i18n="tl.b2">Two days later, a first meeting in Racheli's Tel Aviv apartment.</p>
+        </div>
+      </li>
+      <li class="tl__item reveal" style="--d:.2s">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__date" data-i18n="tl.d3">Mar 3, 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t3">Dinner at Francesca</h3>
+          <p data-i18n="tl.b3">A quiet Italian restaurant by the beach — and the first true spark.</p>
+        </div>
+      </li>
+      <li class="tl__item reveal" style="--d:.3s">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__date" data-i18n="tl.d4">Spring 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t4">The Besor River</h3>
+          <p data-i18n="tl.b4">A picnic in nature where the relationship began to truly bloom.</p>
+        </div>
+      </li>
+      <li class="tl__item reveal" style="--d:.1s">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__date" data-i18n="tl.d5">May 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t5">A Shared Home</h3>
+          <p data-i18n="tl.b5">Moving in together in Tel Aviv before a summer abroad.</p>
+        </div>
+      </li>
+      <li class="tl__item reveal" style="--d:.2s">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__date" data-i18n="tl.d6">Jun 25, 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t6">London Days</h3>
+          <p data-i18n="tl.b6">A few golden days with their friend Dorothy — shows, friends, family.</p>
+        </div>
+      </li>
+      <li class="tl__item reveal" style="--d:.3s">
+        <div class="tl__dot"></div>
+        <div class="tl__card tl__card--accent">
+          <span class="tl__date" data-i18n="tl.d7">Jun 29, 2012</span>
+          <h3 class="tl__title" data-i18n="tl.t7">A Summer in Los Angeles</h3>
+          <p data-i18n="tl.b7">The honeymoon — a love now living happily across two continents.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Memoir -->
+  <section class="memoir section" id="memoir">
+    <div class="section__head reveal">
+      <span class="section__kicker" data-i18n="mem.kicker">Chapter Three</span>
+      <h2 class="section__title" data-i18n="mem.title">Zvika's Memoir</h2>
+      <p class="section__sub" data-i18n="mem.sub">From Bucharest to a life of courage</p>
+    </div>
+
+    <div class="memoir__intro reveal">
+      <p data-i18n="mem.intro">
+        Before the love story, there was a life of remarkable resilience — a child
+        of the Holocaust who became a soldier, a leader, and a survivor in every
+        sense of the word. These are his words, preserved.
+      </p>
+    </div>
+
+    <div class="memoir__chapters">
+      <article class="chapter reveal">
+        <div class="chapter__index">01</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="mem.t1">Born in Bucharest</h3>
+          <p data-i18n="mem.b1">
+            I was born on April 29, 1944, in Bucharest, Romania. On March 15, 1949,
+            we immigrated to Israel, spending our first four months in a transit
+            camp called a <em>Ma'abara</em> before becoming citizens and moving to a
+            village called Kfar-Yona, where I began elementary school.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter reveal" style="--d:.1s">
+        <div class="chapter__index">02</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="mem.t2">A Hard Neighborhood</h3>
+          <p data-i18n="mem.b2">
+            In August 1954 we moved to Tel Aviv, to a neighborhood called Shabazi —
+            poor, crowded, and often violent. Families had arrived from many lands,
+            each carrying their own customs. It was a world that demanded toughness
+            from a boy, long before he was ready for it.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter reveal" style="--d:.2s">
+        <div class="chapter__index">03</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="mem.t3">Reading the Torah</h3>
+          <p data-i18n="mem.b3">
+            In April 1957, thanks to a kind Rabbi who prepared me, I read from the
+            Torah at my Bar Mitzvah. My uncle Moritz — who would one day save my life —
+            gave me a gold Star of David pendant. For the first time, my grandfather
+            approached me with quiet pride.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter reveal" style="--d:.1s">
+        <div class="chapter__index">04</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="mem.t4">A Survivor's Instinct</h3>
+          <p data-i18n="mem.b4">
+            As a Holocaust survivor who had witnessed terrible cruelty, the streets
+            taught me to defend myself. I was sharper than the other boys, and I used
+            that mind to stay one step ahead — until my parents, fearing for my future,
+            sent me to live with my uncle Moritz in Jaffa.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter reveal" style="--d:.2s">
+        <div class="chapter__index">05</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="mem.t5">A Soldier &amp; A Commander</h3>
+          <p data-i18n="mem.b5">
+            In May 1962 I joined the army as a fighter. I served in combat, completed
+            the combat officer course, and went on to command a company. The boy from
+            Shabazi had become a leader — and the story was only beginning.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter chapter--more reveal" style="--d:.1s">
+        <div class="chapter__index">✦</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="mem.t6">The Story Continues…</h3>
+          <p data-i18n="mem.b6">
+            A full life of family, grandchildren, and love still waits to be written
+            here — chapter by chapter, in his own voice.
+          </p>
+          <a href="#contact" class="chapter__cta" data-i18n="mem.cta">Help preserve the next chapter →</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery section section--cream" id="gallery">
+    <div class="section__head reveal">
+      <span class="section__kicker" data-i18n="gal.kicker">Chapter Four</span>
+      <h2 class="section__title" data-i18n="gal.title">A Life in Photographs</h2>
+      <p class="section__sub" data-i18n="gal.sub">Moments, places, and the people who matter</p>
+    </div>
+
+    <div class="gallery__grid">
+      <figure class="gallery__item gallery__item--tall reveal">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.telaviv">Tel Aviv, 2012</span>
+      </figure>
+      <figure class="gallery__item reveal" style="--d:.05s">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.besor">The Besor River</span>
+      </figure>
+      <figure class="gallery__item reveal" style="--d:.1s">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.london">London, June 2012</span>
+      </figure>
+      <figure class="gallery__item gallery__item--wide reveal" style="--d:.15s">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.la">Summer in Los Angeles</span>
+      </figure>
+      <figure class="gallery__item reveal" style="--d:.2s">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.family">Family</span>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Legacy quote -->
+  <section class="legacy section section--dark" id="legacy">
+    <div class="legacy__inner reveal">
+      <span class="legacy__mark">“</span>
+      <p class="legacy__quote" data-i18n="leg.quote">
+        Some stories are too important to be forgotten. They are meant to be kept,
+        passed down, and treasured — for the children, the grandchildren, and
+        everyone who comes after.
+      </p>
+      <p class="legacy__attribution" data-i18n="leg.attr">— The heart of Unforgettable You</p>
+    </div>
+  </section>
+
+  <!-- CTA / Contact -->
+  <section class="cta section" id="contact">
+    <div class="cta__inner">
+      <div class="cta__text reveal">
+        <span class="section__kicker" data-i18n="cta.kicker">For Families &amp; Storytellers</span>
+        <h2 class="section__title" data-i18n="cta.title">Preserve a Story That Lasts Forever</h2>
+        <p class="cta__lede" data-i18n="cta.lede">
+          Every family has an unforgettable story. We turn memories, letters, and
+          photographs into a beautiful, living digital keepsake — designed with care,
+          built to last, and ready to share with generations to come.
+        </p>
+        <ul class="cta__features">
+          <li data-i18n="cta.f1">Elegant, fully custom design</li>
+          <li data-i18n="cta.f2">Interactive timelines &amp; chapters</li>
+          <li data-i18n="cta.f3">Photo &amp; video galleries</li>
+          <li data-i18n="cta.f4">Private or public sharing</li>
+        </ul>
+      </div>
+
+      <form class="cta__form reveal" style="--d:.15s" id="contactForm" novalidate>
+        <h3 class="cta__form-title" data-i18n="cta.formTitle">Start the Conversation</h3>
+        <div class="field">
+          <input type="text" id="name" name="name" required placeholder=" " />
+          <label for="name" data-i18n="cta.name">Your name</label>
+        </div>
+        <div class="field">
+          <input type="email" id="email" name="email" required placeholder=" " />
+          <label for="email" data-i18n="cta.email">Email address</label>
+        </div>
+        <div class="field">
+          <textarea id="message" name="message" rows="4" placeholder=" "></textarea>
+          <label for="message" data-i18n="cta.msg">Tell us about the story you'd like to preserve</label>
+        </div>
+        <button type="submit" class="btn btn--solid btn--block" data-i18n="cta.send">Send Inquiry</button>
+        <p class="cta__form-note" id="formNote" hidden data-i18n="cta.note">Thank you — we'll be in touch shortly. ♥</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="footer__script">Unforgettable</span>
+        <span class="footer__mark">YOU</span>
+      </div>
+      <nav class="footer__nav">
+        <a href="#story" data-i18n="nav.story">Our Story</a>
+        <a href="#timeline" data-i18n="nav.journey">The Journey</a>
+        <a href="#memoir" data-i18n="nav.memoir">Memoir</a>
+        <a href="#gallery" data-i18n="nav.gallery">Gallery</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p data-i18n="footer.copy">© 2026 Unforgettable You · The story of Racheli &amp; Zvika</p>
+      <p class="footer__credit" data-i18n="footer.credit">A keepsake crafted with care.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
