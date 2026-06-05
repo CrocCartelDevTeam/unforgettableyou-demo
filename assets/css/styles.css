@@ -311,9 +311,34 @@ a { color: inherit; text-decoration: none; }
 .tl__title { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; margin: .4rem 0 .5rem; }
 .tl__card p { font-size: .98rem; color: rgba(247,241,232,.75); }
 
-/* ---------- Memoir ---------- */
-.memoir__intro { max-width: 680px; margin: 0 auto 3.5rem; text-align: center; }
+/* ---------- Memoir / His & Her Story ---------- */
+.memoir__intro {
+  max-width: 840px; margin: 0 auto 3.5rem;
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(1.6rem, 4vw, 2.8rem); text-align: start;
+}
 .memoir__intro p { font-family: var(--serif); font-size: 1.3rem; font-style: italic; color: var(--ink-soft); }
+
+.story-portrait {
+  flex: 0 0 auto; width: clamp(120px, 22vw, 188px); aspect-ratio: 4/5;
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(176,141,87,.18), rgba(181,116,107,.12)),
+    var(--cream-deep);
+  display: grid; place-items: center; border: 1px solid var(--line);
+  box-shadow: 0 22px 48px -26px rgba(27,34,51,.5);
+}
+.story-portrait:hover .frame-cap { opacity: 1; transform: translateY(0); }
+
+/* Her Story — rose accent variation */
+.memoir--her .story-portrait {
+  background: linear-gradient(135deg, rgba(181,116,107,.22), rgba(176,141,87,.1)), var(--cream-deep);
+}
+.memoir--her .chapter__index { color: var(--rose); }
+.memoir--her .chapter:hover { border-color: rgba(181,116,107,.45); }
+.memoir--her .chapter--more { background: linear-gradient(135deg, rgba(181,116,107,.14), var(--paper)); }
+.memoir--her .chapter__cta { color: var(--rose); }
+.memoir--her .chapter__cta:hover { border-color: var(--rose); }
 .memoir__chapters {
   max-width: var(--maxw); margin: 0 auto;
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6rem;
@@ -352,6 +377,43 @@ a { color: inherit; text-decoration: none; }
 .gallery__item:hover { transform: scale(1.015); box-shadow: 0 24px 50px -28px rgba(27,34,51,.5); }
 .gallery__item--tall { grid-row: span 2; }
 .gallery__item--wide { grid-column: span 2; }
+
+/* ---------- Travel Diary ---------- */
+.travel__grid {
+  max-width: var(--maxw); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6rem;
+}
+.postcard {
+  display: flex; flex-direction: column; border-radius: var(--radius); overflow: hidden;
+  background: rgba(247,241,232,.04); border: 1px solid var(--line-light);
+  transition: transform .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease);
+}
+.postcard:hover { transform: translateY(-6px); border-color: rgba(201,169,106,.5); box-shadow: 0 28px 55px -30px rgba(0,0,0,.55); }
+.postcard__photo {
+  aspect-ratio: 4/3; position: relative; display: grid; place-items: center;
+  background:
+    linear-gradient(135deg, rgba(176,141,87,.22), rgba(181,116,107,.14)),
+    var(--cream-deep);
+}
+.postcard__body { position: relative; padding: 1.5rem 1.5rem 1.7rem; }
+.postcard__stamp {
+  position: absolute; top: -1.1rem; right: 1.3rem;
+  width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  background: var(--gold); color: var(--navy);
+  display: grid; place-items: center; font-size: 1rem;
+  box-shadow: 0 10px 22px -10px rgba(0,0,0,.6);
+}
+[dir="rtl"] .postcard__stamp { right: auto; left: 1.3rem; }
+.postcard__place { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; color: var(--cream); margin-bottom: .25rem; }
+.postcard__date { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-bright); }
+.postcard__note { margin-top: .7rem; font-size: .95rem; color: rgba(247,241,232,.75); }
+.postcard--add {
+  border-style: dashed; justify-content: center; text-align: center;
+  background: linear-gradient(135deg, rgba(176,141,87,.1), rgba(247,241,232,.02));
+}
+.postcard--add .postcard__body { padding: 2.6rem 1.5rem; }
+.postcard--add .postcard__stamp { position: static; margin: 0 auto 1rem; }
+.postcard__stamp--add { font-size: 1.5rem; line-height: 1; }
 
 /* ---------- Legacy ---------- */
 .legacy__inner { max-width: 880px; margin: 0 auto; text-align: center; position: relative; }
@@ -423,6 +485,8 @@ a { color: inherit; text-decoration: none; }
   .story__grid { grid-template-columns: 1fr; }
   .story__media { max-width: 420px; margin: 0 auto; }
   .memoir__chapters { grid-template-columns: 1fr; }
+  .memoir__intro { flex-direction: column; text-align: center; }
+  .travel__grid { grid-template-columns: repeat(2, 1fr); }
   .cta__inner { grid-template-columns: 1fr; }
 
   .tl::before { left: 18px; }
@@ -433,6 +497,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 620px) {
   .gallery__grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
   .gallery__item--wide { grid-column: span 2; }
+  .travel__grid { grid-template-columns: 1fr; }
   .gallery__item--tall { grid-row: span 1; }
   .cta__features { grid-template-columns: 1fr; }
   .footer__top { flex-direction: column; align-items: flex-start; }
@@ -447,9 +512,13 @@ a { color: inherit; text-decoration: none; }
    Photos filled via Edit Mode
    ========================================================= */
 .story__photo.has-photo,
-.gallery__item.has-photo { background-size: cover; background-position: center; }
+.gallery__item.has-photo,
+.story-portrait.has-photo,
+.postcard__photo.has-photo { background-size: cover; background-position: center; }
 .story__photo.has-photo .photo-placeholder,
-.gallery__item.has-photo .photo-placeholder { display: none; }
+.gallery__item.has-photo .photo-placeholder,
+.story-portrait.has-photo .photo-placeholder,
+.postcard__photo.has-photo .photo-placeholder { display: none; }
 
 /* =========================================================
    Edit Mode (demo) — large, friendly controls for 80+ users

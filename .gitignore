@@ -1,6 +1,11 @@
 # Dependencies
 node_modules/
 
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+
 # Deploy / tooling
 .vercel/
 .netlify/

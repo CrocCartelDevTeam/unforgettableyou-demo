@@ -36,9 +36,10 @@
     <nav class="nav__links" id="navLinks">
       <a href="#story" class="nav__link" data-i18n="nav.story">Our Story</a>
       <a href="#timeline" class="nav__link" data-i18n="nav.journey">The Journey</a>
-      <a href="#memoir" class="nav__link" data-i18n="nav.memoir">Zvika's Memoir</a>
-      <a href="#gallery" class="nav__link" data-i18n="nav.gallery">Gallery</a>
-      <a href="#legacy" class="nav__link" data-i18n="nav.legacy">Legacy</a>
+      <a href="#memoir" class="nav__link" data-i18n="nav.memoir">His Story</a>
+      <a href="#herstory" class="nav__link" data-i18n="nav.herstory">Her Story</a>
+      <a href="#travel" class="nav__link" data-i18n="nav.travel">Travels</a>
+      <a href="#album" class="nav__link" data-i18n="nav.gallery">Album</a>
       <a href="#contact" class="nav__link nav__link--cta" data-i18n="nav.cta">Preserve a Story</a>
       <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">
         <span class="lang-toggle__opt" data-lang="en">EN</span>
@@ -201,15 +202,19 @@
     </ol>
   </section>
 
-  <!-- Memoir -->
+  <!-- His Story (Zvika) -->
   <section class="memoir section" id="memoir">
     <div class="section__head reveal">
       <span class="section__kicker" data-i18n="mem.kicker">Chapter Three</span>
-      <h2 class="section__title" data-i18n="mem.title">Zvika's Memoir</h2>
-      <p class="section__sub" data-i18n="mem.sub">From Bucharest to a life of courage</p>
+      <h2 class="section__title" data-i18n="mem.title">His Story</h2>
+      <p class="section__sub" data-i18n="mem.sub">Zvika · from Bucharest to a life of courage</p>
     </div>
 
     <div class="memoir__intro reveal">
+      <div class="story-portrait" data-photo="zvika">
+        <span class="photo-placeholder" data-i18n="ph.addPhoto">Add your photo</span>
+        <span class="frame-cap" data-i18n="cap.zvika">Zvika</span>
+      </div>
       <p data-i18n="mem.intro">
         Before the love story, there was a life of remarkable resilience — a child
         of the Holocaust who became a soldier, a leader, and a survivor in every
@@ -296,11 +301,134 @@
     </div>
   </section>
 
-  <!-- Gallery -->
-  <section class="gallery section section--cream" id="gallery">
+  <!-- Her Story (Racheli) -->
+  <section class="memoir memoir--her section section--cream" id="herstory">
     <div class="section__head reveal">
-      <span class="section__kicker" data-i18n="gal.kicker">Chapter Four</span>
-      <h2 class="section__title" data-i18n="gal.title">A Life in Photographs</h2>
+      <span class="section__kicker" data-i18n="her.kicker">Chapter Four</span>
+      <h2 class="section__title" data-i18n="her.title">Her Story</h2>
+      <p class="section__sub" data-i18n="her.sub">Racheli · a life of warmth and devotion</p>
+    </div>
+
+    <div class="memoir__intro reveal">
+      <div class="story-portrait" data-photo="racheli">
+        <span class="photo-placeholder" data-i18n="ph.addPhoto">Add your photo</span>
+        <span class="frame-cap" data-i18n="cap.racheli">Racheli</span>
+      </div>
+      <p data-i18n="her.intro">
+        Every great love has two hearts. This is Racheli's story — waiting to be
+        filled with the memories, places, and people who shaped the woman Zvika
+        fell in love with.
+      </p>
+    </div>
+
+    <div class="memoir__chapters">
+      <article class="chapter reveal">
+        <div class="chapter__index">01</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="her.t1">Where It Began</h3>
+          <p data-i18n="her.b1">
+            This is where Racheli's story begins. Share the place she was born, the
+            family that raised her, and the earliest memories she holds dear.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter reveal" style="--d:.1s">
+        <div class="chapter__index">02</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="her.t2">Dreams &amp; Beginnings</h3>
+          <p data-i18n="her.b2">
+            The hopes she carried as a young woman, the work she loved, and the
+            winding path that slowly led her toward the life she lives today.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter reveal" style="--d:.2s">
+        <div class="chapter__index">03</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="her.t3">A Family of Her Own</h3>
+          <p data-i18n="her.b3">
+            The children, the home she built, and the quiet everyday moments that
+            became her greatest pride and joy.
+          </p>
+        </div>
+      </article>
+
+      <article class="chapter chapter--more reveal" style="--d:.1s">
+        <div class="chapter__index">✦</div>
+        <div class="chapter__body">
+          <h3 class="chapter__title" data-i18n="her.t4">Her Chapters Continue…</h3>
+          <p data-i18n="her.b4">
+            There is so much more of her story to tell. Add each memory here, in her
+            own voice, one chapter at a time.
+          </p>
+          <a href="#contact" class="chapter__cta" data-i18n="her.cta">Help preserve her story →</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Travel Diary -->
+  <section class="travel section section--dark" id="travel">
+    <div class="section__head reveal">
+      <span class="section__kicker section__kicker--light" data-i18n="trip.kicker">Chapter Five</span>
+      <h2 class="section__title" data-i18n="trip.title">Travel Diary</h2>
+      <p class="section__sub section__sub--light" data-i18n="trip.sub">The places that hold their hearts</p>
+    </div>
+
+    <div class="travel__grid">
+      <article class="postcard reveal">
+        <div class="postcard__photo" data-photo="trip1">
+          <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        </div>
+        <div class="postcard__body">
+          <span class="postcard__stamp">✦</span>
+          <h3 class="postcard__place" data-i18n="trip.p1">Tel Aviv · Israel</h3>
+          <span class="postcard__date" data-i18n="trip.d1">Where it all began</span>
+          <p class="postcard__note" data-i18n="trip.n1">Home base for a love story written between two continents.</p>
+        </div>
+      </article>
+
+      <article class="postcard reveal" style="--d:.1s">
+        <div class="postcard__photo" data-photo="trip2">
+          <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        </div>
+        <div class="postcard__body">
+          <span class="postcard__stamp">✦</span>
+          <h3 class="postcard__place" data-i18n="trip.p2">London · England</h3>
+          <span class="postcard__date" data-i18n="trip.d2">June 2012</span>
+          <p class="postcard__note" data-i18n="trip.n2">Golden days with our dear friend Dorothy — theatre, laughter, and old friends.</p>
+        </div>
+      </article>
+
+      <article class="postcard reveal" style="--d:.2s">
+        <div class="postcard__photo" data-photo="trip3">
+          <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        </div>
+        <div class="postcard__body">
+          <span class="postcard__stamp">✦</span>
+          <h3 class="postcard__place" data-i18n="trip.p3">Los Angeles · USA</h3>
+          <span class="postcard__date" data-i18n="trip.d3">Summer 2012</span>
+          <p class="postcard__note" data-i18n="trip.n3">The summer we still call our honeymoon, under wide California skies.</p>
+        </div>
+      </article>
+
+      <article class="postcard postcard--add reveal" style="--d:.3s">
+        <div class="postcard__body">
+          <span class="postcard__stamp postcard__stamp--add">+</span>
+          <h3 class="postcard__place" data-i18n="trip.p4">Your Next Adventure</h3>
+          <p class="postcard__note" data-i18n="trip.n4">Every new journey finds its place in the diary.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Photo Album -->
+  <section class="gallery section section--cream" id="album">
+    <div class="section__head reveal">
+      <span class="section__kicker" data-i18n="gal.kicker">Chapter Six</span>
+      <h2 class="section__title" data-i18n="gal.title">Photo Album</h2>
       <p class="section__sub" data-i18n="gal.sub">Moments, places, and the people who matter</p>
     </div>
 
@@ -324,6 +452,18 @@
       <figure class="gallery__item reveal" style="--d:.2s" data-photo="g5">
         <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
         <span class="frame-cap" data-i18n="cap.family">Family</span>
+      </figure>
+      <figure class="gallery__item reveal" style="--d:.05s" data-photo="g6">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.grandchildren">Grandchildren</span>
+      </figure>
+      <figure class="gallery__item gallery__item--wide reveal" style="--d:.1s" data-photo="g7">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.celebrations">Celebrations</span>
+      </figure>
+      <figure class="gallery__item gallery__item--tall reveal" style="--d:.15s" data-photo="g8">
+        <span class="photo-placeholder" data-i18n="ph.here">Your photo here</span>
+        <span class="frame-cap" data-i18n="cap.everyday">Everyday joys</span>
       </figure>
     </div>
   </section>
@@ -390,8 +530,10 @@
       <nav class="footer__nav">
         <a href="#story" data-i18n="nav.story">Our Story</a>
         <a href="#timeline" data-i18n="nav.journey">The Journey</a>
-        <a href="#memoir" data-i18n="nav.memoir">Memoir</a>
-        <a href="#gallery" data-i18n="nav.gallery">Gallery</a>
+        <a href="#memoir" data-i18n="nav.memoir">His Story</a>
+        <a href="#herstory" data-i18n="nav.herstory">Her Story</a>
+        <a href="#travel" data-i18n="nav.travel">Travels</a>
+        <a href="#album" data-i18n="nav.gallery">Album</a>
         <a href="#contact" data-i18n="nav.contact">Contact</a>
       </nav>
     </div>
