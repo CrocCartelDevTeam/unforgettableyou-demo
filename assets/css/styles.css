@@ -511,6 +511,65 @@ body.uy-editing [contenteditable="true"]:focus { outline: 2px solid var(--gold-b
 .uy-photo-btn:hover { background: var(--gold-bright); }
 .uy-photo-btn--ghost { background: rgba(247,241,232,.92); color: var(--navy); }
 [dir="rtl"] .uy-edit-launch { right: auto; left: 1.4rem; }
+.uy-edit-btn:disabled { opacity: .6; cursor: default; }
+
+/* Toast */
+.uy-toast {
+  position: fixed; left: 50%; bottom: 6.5rem; transform: translateX(-50%) translateY(12px);
+  z-index: 960; max-width: min(90vw, 540px);
+  background: var(--navy); color: var(--cream);
+  border: 1px solid var(--gold); border-radius: 8px;
+  padding: 1rem 1.3rem; font-size: 1rem; line-height: 1.5; text-align: center;
+  box-shadow: 0 20px 50px -20px rgba(0,0,0,.6);
+  opacity: 0; transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+.uy-toast.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Login modal */
+.uy-modal {
+  position: fixed; inset: 0; z-index: 970;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15,18,30,.72); backdrop-filter: blur(4px);
+  padding: 1.25rem;
+}
+.uy-modal[hidden] { display: none; }
+.uy-modal__box {
+  position: relative; width: min(440px, 100%);
+  background: var(--paper); color: var(--ink);
+  border-radius: 10px; padding: clamp(1.6rem, 4vw, 2.4rem);
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,.6);
+}
+.uy-modal__close {
+  position: absolute; top: .7rem; right: .9rem;
+  background: none; border: 0; font-size: 1.8rem; line-height: 1;
+  color: var(--ink-soft); cursor: pointer;
+}
+[dir="rtl"] .uy-modal__close { right: auto; left: .9rem; }
+.uy-modal__title { font-family: var(--serif); font-weight: 500; font-size: 1.8rem; margin-bottom: .4rem; }
+.uy-modal__sub { color: var(--ink-soft); font-size: 1rem; margin-bottom: 1.3rem; }
+.uy-modal__err {
+  background: rgba(181,116,107,.14); border: 1px solid rgba(181,116,107,.5);
+  color: #8c4a40; border-radius: 6px; padding: .7rem .9rem; margin-bottom: 1rem; font-size: .95rem;
+}
+.uy-field { display: block; margin-bottom: 1rem; }
+.uy-field span { display: block; font-size: .9rem; color: var(--ink-soft); margin-bottom: .35rem; }
+.uy-field input {
+  width: 100%; padding: .85rem 1rem; font-size: 1.05rem; font-family: var(--sans);
+  border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink);
+}
+.uy-field input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(176,141,87,.18); }
+.uy-modal__btn {
+  width: 100%; padding: .9rem 1rem; font-size: 1.05rem; font-family: var(--sans);
+  border-radius: 6px; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink);
+  transition: all .25s var(--ease);
+}
+.uy-modal__btn:hover { border-color: var(--gold); }
+.uy-modal__btn--primary { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 500; }
+.uy-modal__btn--primary:hover { background: var(--gold-bright); }
+.uy-modal__or { text-align: center; margin: 1.1rem 0; position: relative; color: var(--ink-soft); }
+.uy-modal__or::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--line); }
+.uy-modal__or span { position: relative; background: var(--paper); padding: 0 .8rem; font-size: .85rem; }
+.uy-modal__note { margin-top: .9rem; color: #5b7a52; font-size: .95rem; text-align: center; }
 
 /* =========================================================
    Hebrew typography + RTL

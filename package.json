@@ -1,0 +1,9 @@
+{
+  "name": "unforgettableyou",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Unforgettable You — bilingual memoir site with inline editing + publish API",
+  "engines": {
+    "node": ">=18"
+  }
+}

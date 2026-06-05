@@ -193,12 +193,15 @@
 
   var STORAGE_KEY = "uy_lang";
 
+  /* Photo precedence: the editor's local working copy, then published, then none. */
   function applyPhotos() {
-    var photos = window.UY_PHOTOS || {};
+    var local = window.UY_PHOTOS || {};
+    var pub = window.UY_PUBLISHED_PHOTOS || {};
     document.querySelectorAll("[data-photo]").forEach(function (el) {
       var k = el.getAttribute("data-photo");
-      if (photos[k]) {
-        el.style.backgroundImage = "url(" + photos[k] + ")";
+      var src = (local[k] != null) ? local[k] : pub[k];
+      if (src) {
+        el.style.backgroundImage = "url(" + src + ")";
         el.classList.add("has-photo");
       } else {
         el.style.backgroundImage = "";
@@ -211,14 +214,18 @@
     if (!T[lang]) lang = "en";
     var dict = T[lang];
     var doc = document.documentElement;
-    var ov = (window.UY_OVERRIDES && window.UY_OVERRIDES[lang]) || {};
+    /* Text precedence: local working copy > published > built-in default. */
+    var ovLocal = (window.UY_OVERRIDES && window.UY_OVERRIDES[lang]) || {};
+    var ovPub = (window.UY_PUBLISHED_TEXT && window.UY_PUBLISHED_TEXT[lang]) || {};
 
     doc.setAttribute("lang", lang);
     doc.setAttribute("dir", lang === "he" ? "rtl" : "ltr");
 
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
-      var val = (ov[key] != null) ? ov[key] : dict[key];
+      var val = (ovLocal[key] != null) ? ovLocal[key]
+              : (ovPub[key] != null) ? ovPub[key]
+              : dict[key];
       if (val != null) el.innerHTML = val;
     });
     applyPhotos();
@@ -233,13 +240,34 @@
     document.dispatchEvent(new CustomEvent("uy:langchange", { detail: { lang: lang } }));
   }
 
+  /* Load published content (committed by the editor) so every visitor sees it.
+     Files may not exist yet (404) — that's fine, we just fall back to defaults. */
+  function loadPublished(done) {
+    var pending = 2;
+    function fin() { if (--pending <= 0) done && done(); }
+    function getJson(url, set) {
+      fetch(url, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { if (j) set(j); })
+        .catch(function () {})
+        .then(fin, fin);
+    }
+    getJson("content/overrides.json", function (j) { window.UY_PUBLISHED_TEXT = j; });
+    getJson("content/photos.json", function (j) { window.UY_PUBLISHED_PHOTOS = j; });
+  }
+
   function init() {
+    window.UY_PUBLISHED_TEXT = {};
+    window.UY_PUBLISHED_PHOTOS = {};
     try { window.UY_OVERRIDES = JSON.parse(localStorage.getItem("uy_overrides") || "{}"); } catch (e) { window.UY_OVERRIDES = {}; }
     try { window.UY_PHOTOS = JSON.parse(localStorage.getItem("uy_photos") || "{}"); } catch (e) { window.UY_PHOTOS = {}; }
 
     var saved = "en";
     try { saved = localStorage.getItem(STORAGE_KEY) || "en"; } catch (e) {}
     apply(saved);
+
+    // Then layer in published content and re-render.
+    loadPublished(function () { apply(window.UY_LANG || saved); });
 
     var toggle = document.getElementById("langToggle");
     if (toggle) {
