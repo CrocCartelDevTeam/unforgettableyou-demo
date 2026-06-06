@@ -545,6 +545,48 @@
 
   <script src="assets/js/i18n.js"></script>
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/edit-mode.js"></script>
+
+  <!-- Editor selection:
+       Default visitors get the built-in editor. Add ?inkwell=1 to the URL to
+       live-test the standalone Inkwell product instead (drives the SAME /api,
+       so Publish really commits). This block is fully reversible. -->
+  <script>
+    (function () {
+      var useInkwell = /[?&]inkwell=1/.test(location.search);
+      function add(src) { var s = document.createElement("script"); s.src = src; document.body.appendChild(s); return s; }
+
+      if (!useInkwell) { add("assets/js/edit-mode.js"); return; }
+
+      // Hide host photo placeholders once Inkwell paints a draft photo.
+      var st = document.createElement("style");
+      st.textContent = "[data-photo].ink-has-photo::before{content:none !important;}";
+      document.head.appendChild(st);
+
+      var css = document.createElement("link");
+      css.rel = "stylesheet"; css.href = "assets/inkwell/inkwell-editor.css";
+      document.head.appendChild(css);
+
+      window.Inkwell = window.Inkwell || {};
+      window.Inkwell.config = {
+        apiBase: "/api",
+        editAttribute: "data-i18n",   // bind to Unforgettable You's existing markup
+        photoAttribute: "data-photo",
+        manageContent: false,          // i18n.js already renders published content
+        brandName: "Unforgettable You",
+        launchLabel: "Edit with Inkwell",
+        getLang: function () { return window.UY_LANG || "en"; }
+      };
+
+      // Load protocol -> runtime -> editor in order, then init + keep edits
+      // in sync when the EN/עב language toggle re-renders the page.
+      add("assets/inkwell/inkwell-protocol.js").onload = function () {
+        add("assets/inkwell/inkwell-runtime.js").onload = function () {
+          window.Inkwell.init(window.Inkwell.config);
+          document.addEventListener("uy:langchange", function () { window.Inkwell.apply(); });
+          add("assets/inkwell/inkwell-editor.js");
+        };
+      };
+    })();
+  </script>
 </body>
 </html>

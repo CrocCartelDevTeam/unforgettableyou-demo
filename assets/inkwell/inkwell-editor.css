@@ -1,0 +1,108 @@
+/* Inkwell editor UI — neutral, white-label-friendly. Override --ink-accent to brand it. */
+:root {
+  --ink-accent: #2f6df6;
+  --ink-accent-ink: #ffffff;
+  --ink-ink: #16203a;
+  --ink-panel: #ffffff;
+  --ink-ring: rgba(47, 109, 246, 0.35);
+}
+
+.ink-launch {
+  position: fixed; right: 18px; bottom: 18px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 18px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--ink-accent); color: var(--ink-accent-ink);
+  font: 600 15px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.ink-launch:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28); }
+.ink-launch__icon { font-size: 16px; }
+
+.ink-bar {
+  position: fixed; left: 0; right: 0; bottom: -120px; z-index: 2147483000;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 12px 18px; background: var(--ink-ink); color: #fff;
+  font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+  transition: bottom .25s ease;
+}
+.ink-bar.is-on { bottom: 0; }
+.ink-bar__msg { flex: 1 1 320px; min-width: 240px; opacity: .92; }
+.ink-bar__msg strong { color: #fff; }
+.ink-bar__actions { display: flex; gap: 10px; flex: 0 0 auto; }
+
+.ink-btn {
+  padding: 9px 16px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.28);
+  background: transparent; color: #fff; cursor: pointer; font: inherit; font-weight: 600;
+}
+.ink-btn:hover { background: rgba(255, 255, 255, 0.12); }
+.ink-btn--primary { background: var(--ink-accent); border-color: var(--ink-accent); }
+.ink-btn--primary:hover { filter: brightness(1.06); }
+.ink-btn:disabled { opacity: .6; cursor: default; }
+
+.ink-editing [data-edit] { outline: 1px dashed rgba(47, 109, 246, 0.4); outline-offset: 3px; }
+.ink-editable:hover { outline-color: var(--ink-accent); }
+.ink-editable:focus { outline: 2px solid var(--ink-accent); background: rgba(47, 109, 246, 0.06); }
+
+[data-photo] { position: relative; }
+.ink-photo-tools {
+  position: absolute; top: 8px; left: 8px; z-index: 5; display: flex; gap: 6px;
+}
+.ink-photo-btn {
+  padding: 7px 11px; border-radius: 7px; border: 0; cursor: pointer;
+  background: var(--ink-accent); color: #fff; font: 600 12px/1 system-ui, sans-serif;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+.ink-photo-btn--ghost { background: rgba(0, 0, 0, 0.6); }
+
+.ink-toast {
+  position: fixed; left: 50%; bottom: 88px; transform: translateX(-50%) translateY(12px);
+  z-index: 2147483001; max-width: min(560px, 92vw);
+  padding: 13px 18px; border-radius: 10px; background: var(--ink-ink); color: #fff;
+  font: 14px/1.5 system-ui, sans-serif; box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+  opacity: 0; transition: opacity .35s ease, transform .35s ease; pointer-events: none;
+}
+.ink-toast.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.ink-modal {
+  position: fixed; inset: 0; z-index: 2147483002; display: flex; align-items: center; justify-content: center;
+  background: rgba(8, 12, 22, 0.55); padding: 18px;
+  font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.ink-modal__box {
+  position: relative; width: 100%; max-width: 400px; background: var(--ink-panel); color: var(--ink-ink);
+  border-radius: 14px; padding: 26px 24px; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+}
+.ink-modal__close {
+  position: absolute; top: 12px; right: 14px; border: 0; background: transparent;
+  font-size: 24px; line-height: 1; color: #8a93a6; cursor: pointer;
+}
+.ink-modal__title { margin: 0 0 6px; font-size: 20px; }
+.ink-modal__sub { margin: 0 0 16px; color: #5b6479; font-size: 14px; }
+.ink-modal__err {
+  margin: 0 0 12px; padding: 10px 12px; border-radius: 8px;
+  background: #fdecec; color: #b42318; font-size: 13px;
+}
+.ink-field { display: block; margin: 0 0 12px; }
+.ink-field span { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: #3a4257; }
+.ink-field input {
+  width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #cdd3df;
+  border-radius: 8px; font: inherit;
+}
+.ink-field input:focus { outline: 2px solid var(--ink-ring); border-color: var(--ink-accent); }
+.ink-modal__btn {
+  width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cdd3df; background: #f4f6fb;
+  color: var(--ink-ink); font: inherit; font-weight: 600; cursor: pointer; margin-top: 2px;
+}
+.ink-modal__btn--primary { background: var(--ink-accent); border-color: var(--ink-accent); color: #fff; }
+.ink-modal__or { text-align: center; margin: 14px 0; color: #97a0b3; position: relative; }
+.ink-modal__or span { background: var(--ink-panel); padding: 0 10px; position: relative; z-index: 1; }
+.ink-modal__or::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #e4e8f0; }
+.ink-modal__note { margin: 12px 0 0; font-size: 13px; color: #2f7a44; background: #eafaf0; padding: 10px 12px; border-radius: 8px; }
+
+@media (max-width: 560px) {
+  .ink-bar { flex-direction: column; align-items: stretch; }
+  .ink-bar__actions { justify-content: stretch; }
+  .ink-bar__actions .ink-btn { flex: 1; text-align: center; }
+}
