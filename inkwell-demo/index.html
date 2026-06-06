@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/inkwell/inkwell-editor.css">
+  <link rel="stylesheet" href="../assets/inkwell/inkwell-editor.css">
   <style>
     :root{
       --ink:#1c1a17; --muted:#6b645c; --line:#e9e3da; --bg:#fbf8f4;
@@ -145,17 +145,17 @@
        "Publish" simply keeps your edits in this browser and never writes to any
        repo. On a real install, apiBase points at the deployed Inkwell API and
        Publish commits live. -->
-  <script src="/assets/inkwell/inkwell-protocol.js"></script>
-  <script src="/assets/inkwell/inkwell-runtime.js"></script>
+  <script src="../assets/inkwell/inkwell-protocol.js"></script>
+  <script src="../assets/inkwell/inkwell-runtime.js"></script>
   <script>
     window.Inkwell.config = {
-      apiBase: "/inkwell-demo/__no_api__",       // intentional: keeps the demo read-only to the server
-      contentUrl: "/inkwell-demo/__no_content__",
+      apiBase: "./__no_api__",       // intentional: keeps the demo read-only to the server
+      contentUrl: "./__no_content__",
       brandName: "Maison Lumière",
       launchLabel: "Try editing this page"
     };
     window.Inkwell.init(window.Inkwell.config);
   </script>
-  <script src="/assets/inkwell/inkwell-editor.js"></script>
+  <script src="../assets/inkwell/inkwell-editor.js"></script>
 </body>
 </html>
