@@ -154,6 +154,9 @@
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .ink-bar__field { display: inline-flex; align-items: center; gap: 7px; }
+/* A class `display` overrides the bare [hidden] attribute, so restore it
+   explicitly: only the controls relevant to the selected element should show. */
+.ink-bar__field[hidden] { display: none; }
 .ink-bar__fl { opacity: .82; }
 .ink-bar__input {
   padding: 7px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.28);
@@ -252,9 +255,91 @@
 .ink-hist__meta b { font-size: 14px; }
 .ink-hist__meta span { color: #6b7280; font-size: 12px; }
 
-@media (max-width: 560px) {
-  .ink-bar { flex-direction: column; align-items: stretch; }
-  .ink-bar__actions { justify-content: stretch; flex-wrap: wrap; }
-  .ink-bar__actions .ink-btn { flex: 1; text-align: center; }
-  .ink-bar__input { min-width: 0; flex: 1; }
+/* team & account panel */
+.ink-admin { display: grid; gap: 22px; max-height: 64vh; overflow: auto; }
+.ink-admin__sec h3 { margin: 0 0 10px; font-size: 15px; color: var(--ink-ink); }
+.ink-admin__sec h4 { margin: 0 0 8px; font-size: 13px; color: #3a4257; }
+.ink-admin__list { display: grid; gap: 8px; }
+.ink-admin__row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  border: 1px solid var(--ink-line, #e4e7f2); border-radius: 10px; padding: 9px 12px;
+}
+.ink-admin__who { display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0; }
+.ink-admin__who b { font-size: 14px; }
+.ink-admin__who span { font-size: 12px; color: #6b7280; overflow: hidden; text-overflow: ellipsis; }
+.ink-admin__pend {
+  font-style: normal; font-size: 11px; font-weight: 700; color: #92580a;
+  background: #fff3d6; border-radius: 999px; padding: 1px 8px; width: fit-content; margin-top: 2px;
+}
+.ink-admin__role {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+  border-radius: 999px; padding: 3px 9px;
+}
+.ink-admin__role--owner { background: #efe6ff; color: #6b3fd1; }
+.ink-admin__role--admin { background: #e3f0ff; color: #1f63c4; }
+.ink-admin__role--editor { background: #eef1f6; color: #4b5468; }
+.ink-admin__src { font-size: 11px; color: #97a0b3; }
+.ink-admin__rolesel { padding: 6px 8px; border: 1px solid #cdd3df; border-radius: 8px; font: inherit; }
+.ink-admin__rm { color: #b42318; }
+.ink-admin__inviteform { display: flex; gap: 8px; flex-wrap: wrap; }
+.ink-admin__inviteform input { flex: 1 1 140px; min-width: 0; padding: 10px 11px; border: 1px solid #cdd3df; border-radius: 8px; font: inherit; }
+.ink-admin__inviteform select { padding: 10px; border: 1px solid #cdd3df; border-radius: 8px; font: inherit; }
+.ink-admin__inviteform .ink-btn { flex: 0 0 auto; }
+.ink-admin__invite { margin-top: 14px; }
+.ink-admin__hint { margin: 8px 0 0; font-size: 12px; color: #6b7280; }
+.ink-admin__invlink { margin-top: 10px; background: #f4f6fb; border: 1px solid #e1e6f0; border-radius: 8px; padding: 10px 12px; }
+.ink-admin__invlink p { margin: 0 0 8px; font-size: 12px; color: #3a4257; line-height: 1.5; }
+.ink-admin__copyrow { display: flex; gap: 8px; }
+.ink-admin__copyrow input { flex: 1 1 auto; min-width: 0; padding: 9px 10px; border: 1px solid #cdd3df; border-radius: 8px; font: inherit; font-size: 12px; color: #3a4257; background: #fff; }
+.ink-admin__copyrow .ink-btn { flex: 0 0 auto; }
+.ink-admin__diag { margin-top: 10px; }
+.ink-diag__sum { font-size: 12px; font-weight: 600; color: #3a4257; margin-bottom: 8px; }
+.ink-diag__row { display: grid; grid-template-columns: 18px 120px 1fr; gap: 8px; align-items: start; padding: 6px 0; border-top: 1px solid #eef1f6; font-size: 12px; }
+.ink-diag__i { text-align: center; font-weight: 700; }
+.ink-diag__lbl { font-weight: 600; color: #3a4257; }
+.ink-diag__d { color: #5b6478; line-height: 1.45; }
+.ink-diag__row--ok .ink-diag__i { color: #16a34a; }
+.ink-diag__row--warn .ink-diag__i { color: #d97706; }
+.ink-diag__row--error .ink-diag__i { color: #dc2626; }
+.ink-diag__row--info .ink-diag__i { color: #6b7280; }
+.ink-admin__note { margin: 12px 0 0; font-size: 13px; color: #3a4257; background: #f4f6fb; padding: 10px 12px; border-radius: 8px; line-height: 1.5; }
+.ink-admin__note code { background: #e7ebf3; padding: 1px 5px; border-radius: 5px; font-size: 12px; }
+.ink-admin__you { margin: 0 0 10px; font-size: 13px; }
+.ink-admin__pw { display: flex; gap: 8px; flex-wrap: wrap; }
+.ink-admin__pw input { flex: 1 1 160px; min-width: 0; padding: 10px 11px; border: 1px solid #cdd3df; border-radius: 8px; font: inherit; }
+.ink-admin__pw .ink-btn { flex: 0 0 auto; }
+.ink-admin__signout { margin-top: 14px; color: #b42318; }
+
+@media (max-width: 640px) {
+  .ink-launch { right: 12px; bottom: 12px; padding: 11px 16px; font-size: 14px; }
+
+  /* The toolbar must never swallow the whole screen: cap its height and let it
+     scroll internally, with the content you tapped staying visible above it. */
+  .ink-bar {
+    flex-direction: column; align-items: stretch; gap: 10px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    max-height: 60vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  /* Short hint up top; it doesn't need to dominate a phone screen. */
+  .ink-bar__msg { order: -1; flex: 0 0 auto; min-width: 0; font-size: 12px; opacity: .8; }
+
+  /* What you tapped: make its controls the prominent, full-width block. */
+  .ink-bar__sel {
+    flex: 1 1 auto; gap: 8px; padding: 8px; border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .ink-bar__sellbl { max-width: 100%; }
+  .ink-bar__field { display: flex; width: 100%; align-items: center; }
+  .ink-bar__field .ink-bar__input { flex: 1; min-width: 0; }
+  .ink-bar__input--icon { flex: 0 0 64px; }
+
+  /* Buttons in a tidy grid instead of nine full-width stacked rows. */
+  .ink-bar__actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .ink-bar__actions .ink-btn { width: 100%; text-align: center; padding: 11px 8px; }
+  .ink-bar__actions .ink-btn--sm { font-size: 13px; }
+  /* Publish is the primary action: give it the full width on its own row. */
+  #lePublish { grid-column: 1 / -1; }
+
+  .ink-admin__inviteform input, .ink-admin__pw input { flex: 1 1 100%; }
+  .ink-modal__box { max-width: 100%; }
 }

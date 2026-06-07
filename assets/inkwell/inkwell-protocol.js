@@ -122,6 +122,7 @@
     "color": "color",
     "background-color": "color",
     "border-color": "color",
+    "font-family": "fontFamily",
     "font-size": "len",
     "font-weight": "weight",
     "font-style": "fontStyle",
@@ -140,6 +141,26 @@
     "min-height": "lenOrAuto",
     "opacity": "opacity"
   };
+
+  /* Font family is restricted to a curated allow-list of WEB-SAFE stacks (all
+     locally available - no external font loading, no network calls). The stored
+     value must match one of these EXACTLY, so a crafted font-family string can
+     never inject anything. Each stack is kept short (well under the 64-char
+     per-value cap in validStyleValue). { label } is for the editor dropdown. */
+  var FONT_FAMILIES = [
+    { label: "System", value: "system-ui, -apple-system, sans-serif" },
+    { label: "Helvetica / Arial", value: "Helvetica, Arial, sans-serif" },
+    { label: "Verdana", value: "Verdana, Geneva, sans-serif" },
+    { label: "Tahoma", value: "Tahoma, Verdana, sans-serif" },
+    { label: "Trebuchet MS", value: "'Trebuchet MS', Helvetica, sans-serif" },
+    { label: "Georgia", value: "Georgia, 'Times New Roman', serif" },
+    { label: "Times", value: "'Times New Roman', Times, serif" },
+    { label: "Palatino", value: "'Palatino Linotype', Palatino, serif" },
+    { label: "Garamond", value: "Garamond, Georgia, serif" },
+    { label: "Courier", value: "'Courier New', Courier, monospace" },
+    { label: "Monospace", value: "ui-monospace, Menlo, Consolas, monospace" }
+  ];
+  var FONT_FAMILY_VALUES = FONT_FAMILIES.map(function (f) { return f.value; });
 
   var NAMED_COLORS = [
     "transparent", "currentcolor", "inherit", "black", "white", "red", "green", "blue",
@@ -169,6 +190,7 @@
     if (!type) return false;
     switch (type) {
       case "color": return validColor(s);
+      case "fontFamily": return FONT_FAMILY_VALUES.indexOf(s) !== -1;
       case "len": return RE_LEN.test(s);
       case "lens": return RE_LENS.test(s);
       case "lenOrNum": return RE_LEN.test(s) || RE_NUM.test(s);
@@ -477,6 +499,7 @@
     validEmbedUrl: validEmbedUrl,
     ANIMATION_PRESETS: ANIMATION_PRESETS,
     STYLE_PROPS: STYLE_PROPS,
+    FONT_FAMILIES: FONT_FAMILIES,
     LIMITS: LIMITS,
     PAGE_LIMITS: PAGE_LIMITS,
     KEY_RE: KEY_RE,

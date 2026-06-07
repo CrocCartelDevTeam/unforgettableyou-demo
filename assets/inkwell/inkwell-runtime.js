@@ -70,7 +70,19 @@
   function embedEls() { return document.querySelectorAll("[" + embedAttr() + "]"); }
   function linkEls() { return document.querySelectorAll("[" + linkAttr() + "]"); }
   function iconEls() { return document.querySelectorAll("[" + iconAttr() + "]"); }
-  function styleEls() { return document.querySelectorAll("[" + styleAttr() + "]"); }
+  // Any editable element can be styled, not just [data-style] ones. We resolve a
+  // single stable "style key" per element (preferring an explicit data-style),
+  // so fonts/colors/sizes work on plain text/photos/links/icons too.
+  function styleKeyFor(el) {
+    return el.getAttribute(styleAttr()) || el.getAttribute(editAttr()) ||
+           el.getAttribute(photoAttr()) || el.getAttribute(linkAttr()) || el.getAttribute(iconAttr());
+  }
+  LE.styleKeyFor = styleKeyFor;
+  function styleEls() {
+    return document.querySelectorAll(
+      "[" + styleAttr() + "],[" + editAttr() + "],[" + photoAttr() + "],[" + linkAttr() + "],[" + iconAttr() + "]"
+    );
+  }
 
   function originalKey(key, lang) { return lang + "\u0000" + key; }
 
@@ -440,8 +452,8 @@
     var local = LE.draftStyles || {};
     var pub = (LE.published && LE.published.styles) || {};
     Array.prototype.forEach.call(styleEls(), function (el) {
-      var k = el.getAttribute(styleAttr());
-      var map = local[k] != null ? local[k] : pub[k];
+      var k = styleKeyFor(el);
+      var map = k != null ? (local[k] != null ? local[k] : pub[k]) : null;
       // Clear anything Inkwell previously applied so removals take effect.
       var prev = el.__inkStyleProps || [];
       prev.forEach(function (p) { el.style.removeProperty(p); });

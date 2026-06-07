@@ -206,7 +206,12 @@
   }
 
   /* ---------------- UI elements ---------------- */
-  var launchBtn, bar, modal, previewModal, toast, fileInput, pdfInput, videoInput, audioInput, mdInput, toastTimer, styleModal, emojiPop, infoModal, seoModal, historyModal;
+  var launchBtn, bar, modal, previewModal, toast, fileInput, pdfInput, videoInput, audioInput, mdInput, toastTimer, styleModal, emojiPop, infoModal, seoModal, historyModal, adminModal, pwModal;
+  var meState = null;        // last /api/me snapshot
+  var loginIntent = "publish"; // why the sign-in modal was opened
+  var pwMode = null;         // "invite" | "reset" when the set-password modal is open
+  var pwToken = "";
+  var lastInvite = null;     // { link, user } when an invite link needs copying (no email provider)
   LE.draftPages = LE.draftPages || {};
   LE.draftLinks = LE.draftLinks || {};
   LE.draftIcons = LE.draftIcons || {};
@@ -252,6 +257,7 @@
         '<button type="button" class="ink-btn" id="leNewPage" hidden>+ New page (.md)</button>' +
         '<button type="button" class="ink-btn ink-btn--sm" id="leSeo">\u{1F50E} SEO</button>' +
         '<button type="button" class="ink-btn ink-btn--sm" id="leHistory" hidden>\u{1F551} History</button>' +
+        '<button type="button" class="ink-btn ink-btn--sm" id="leTeam" hidden>\u{1F465} Team</button>' +
         '<button type="button" class="ink-btn ink-btn--sm" id="leUndo" title="Undo" disabled>\u21B6</button>' +
         '<button type="button" class="ink-btn ink-btn--sm" id="leRedo" title="Redo" disabled>\u21B7</button>' +
         '<button type="button" class="ink-btn" id="leReset">Reset</button>' +
@@ -286,7 +292,7 @@
       '<div class="ink-modal__box" role="dialog" aria-modal="true" aria-labelledby="leModalTitle">' +
         '<button class="ink-modal__close" id="leModalClose" aria-label="Close">\u00D7</button>' +
         '<h2 class="ink-modal__title" id="leModalTitle">Sign in to publish</h2>' +
-        '<p class="ink-modal__sub">Publishing makes your changes live on ' + esc(brand()) + '.</p>' +
+        '<p class="ink-modal__sub" id="leModalSub">Publishing makes your changes live on ' + esc(brand()) + '.</p>' +
         '<div class="ink-modal__err" id="leErr" hidden></div>' +
         '<label class="ink-field"><span>Username</span><input id="leUser" type="text" autocomplete="username"></label>' +
         '<label class="ink-field"><span>Password</span><input id="lePass" type="password" autocomplete="current-password"></label>' +
@@ -307,6 +313,7 @@
         '<ul class="ink-feature">' +
           '<li><span class="ink-feature__i">\u2713</span> Commits your changes straight to your site\u2019s <strong>Git repo</strong> \u2014 live in about a minute.</li>' +
           '<li><span class="ink-feature__i">\u2713</span> Locked behind <strong>email + password</strong> sign-in, or a one-time <strong>magic link</strong>.</li>' +
+          '<li><span class="ink-feature__i">\u2713</span> This demo is <strong>open on purpose</strong>; on a real install <strong>visitors never see the editor</strong> \u2014 it shows only after an admin signs in.</li>' +
           '<li><span class="ink-feature__i">\u2713</span> The Git token <strong>never touches the browser</strong> \u2014 it lives only on the server.</li>' +
           '<li><span class="ink-feature__i">\u2713</span> Every change is <strong>sanitized server-side</strong> before it\u2019s saved.</li>' +
         '</ul>' +
@@ -324,6 +331,7 @@
         '<div class="ink-style__grid">' +
           '<label class="ink-style__row"><span>Text color</span><input type="color" id="leStyColor"></label>' +
           '<label class="ink-style__row"><span>Background</span><input type="color" id="leStyBg"></label>' +
+          '<label class="ink-style__row"><span>Font</span><select id="leStyFont"></select></label>' +
           '<label class="ink-style__row"><span>Font size</span><span class="ink-style__rng"><input type="range" id="leStyFs" min="10" max="80" step="1"><b id="leStyFsV">\u2014</b></span></label>' +
           '<label class="ink-style__row"><span>Weight</span><select id="leStyWeight"><option value="">\u2014</option><option value="400">Normal</option><option value="600">Semibold</option><option value="700">Bold</option><option value="800">Extra bold</option></select></label>' +
           '<div class="ink-style__row"><span>Align</span><span class="ink-style__btns" id="leStyAlign">' +
@@ -389,7 +397,29 @@
         '<div class="ink-hist" id="leHistList">Loading\u2026</div>' +
       "</div>";
 
-    [launchBtn, bar, fileInput, pdfInput, videoInput, audioInput, mdInput, toast, modal, previewModal, styleModal, emojiPop, infoModal, seoModal, historyModal].forEach(function (n) { document.body.appendChild(n); });
+    // Team & account panel (admins). Body is rendered dynamically in openAdmin().
+    adminModal = el("div", "ink-modal ink-modal--admin"); adminModal.hidden = true;
+    adminModal.innerHTML =
+      '<div class="ink-modal__box" role="dialog" aria-modal="true" aria-labelledby="leAdminTitle">' +
+        '<button class="ink-modal__close" id="leAdminClose" aria-label="Close">\u00D7</button>' +
+        '<h2 class="ink-modal__title" id="leAdminTitle">Team &amp; account</h2>' +
+        '<div class="ink-admin" id="leAdminBody">Loading\u2026</div>' +
+      "</div>";
+
+    // Set-password modal: used for accepting an invite and for password reset.
+    pwModal = el("div", "ink-modal ink-modal--pw"); pwModal.hidden = true;
+    pwModal.innerHTML =
+      '<div class="ink-modal__box" role="dialog" aria-modal="true" aria-labelledby="lePwTitle">' +
+        '<button class="ink-modal__close" id="lePwClose" aria-label="Close">\u00D7</button>' +
+        '<h2 class="ink-modal__title" id="lePwTitle">Set your password</h2>' +
+        '<p class="ink-modal__sub" id="lePwSub">Choose a password to finish setting up your account.</p>' +
+        '<div class="ink-modal__err" id="lePwErr" hidden></div>' +
+        '<label class="ink-field"><span>New password</span><input id="lePwNew" type="password" autocomplete="new-password"></label>' +
+        '<label class="ink-field"><span>Confirm password</span><input id="lePwNew2" type="password" autocomplete="new-password"></label>' +
+        '<button class="ink-modal__btn ink-modal__btn--primary" id="lePwSubmit">Save &amp; sign in</button>' +
+      "</div>";
+
+    [launchBtn, bar, fileInput, pdfInput, videoInput, audioInput, mdInput, toast, modal, previewModal, styleModal, emojiPop, infoModal, seoModal, historyModal, adminModal, pwModal].forEach(function (n) { document.body.appendChild(n); });
   }
   function el(tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -712,6 +742,19 @@
       sel.appendChild(o);
     });
   }
+  function fillFontSelect() {
+    var sel = document.getElementById("leStyFont");
+    if (!sel || sel.options.length) return;
+    var def = document.createElement("option");
+    def.value = ""; def.textContent = "Default (site font)";
+    sel.appendChild(def);
+    ((P && P.FONT_FAMILIES) || []).forEach(function (f) {
+      var o = document.createElement("option");
+      o.value = f.value; o.textContent = f.label;
+      o.style.fontFamily = f.value; // preview the typeface in the dropdown
+      sel.appendChild(o);
+    });
+  }
   function showEl(id, on) { var n = document.getElementById(id); if (n) n.hidden = !on; }
   function selectableSel() {
     return [editSel(), photoSel(), pdfSel(), linkSel(), iconSel(), styleSel()].join(",");
@@ -729,7 +772,10 @@
     // Alt text only applies to real <img> elements that carry a photo key.
     var photoKey = elx.getAttribute(photoAttr());
     var alt = (photoKey && elx.tagName === "IMG") ? photoKey : null;
-    selKeys = { anim: anim || null, link: link || null, icon: icon || null, style: styl || null, alt: alt || null };
+    // Any selectable element can be styled (fonts/colors/sizes), not just
+    // [data-style] ones. Resolve a stable style key the same way the runtime does.
+    var styleKey = styl || anim || link || icon;
+    selKeys = { anim: anim || null, link: link || null, icon: icon || null, style: styleKey || null, alt: alt || null };
 
     var kEl = document.getElementById("leSelKey");
     if (kEl) kEl.textContent = styl || link || icon || anim;
@@ -742,8 +788,21 @@
     var ii = document.getElementById("leIconInput"); if (ii && icon) ii.value = currentIcon(icon);
     showEl("leAltWrap", !!alt);
     var ai = document.getElementById("leAltInput"); if (ai && alt) ai.value = currentAlt(alt);
-    showEl("leStyleBtn", !!styl);
+    showEl("leStyleBtn", !!styleKey);
     showEl("leSelWrap", true);
+    keepSelectionVisible(elx);
+  }
+  // On a phone the toolbar sits over the bottom of the page; nudge the tapped
+  // element up so it (and its controls) are both visible.
+  function keepSelectionVisible(elx) {
+    if (window.innerWidth > 640 || !elx || !elx.getBoundingClientRect) return;
+    try {
+      var r = elx.getBoundingClientRect();
+      var safeBottom = window.innerHeight * 0.4; // bar may cover ~lower 60%
+      if (r.bottom > safeBottom || r.top < 8) {
+        elx.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
+    } catch (e) {}
   }
   function currentAlt(key) {
     if (LE.draftAlts && LE.draftAlts[key] != null) return LE.draftAlts[key];
@@ -864,6 +923,9 @@
     bindRange("leStyPad", "leStyPadV", "padding", "px");
     bindRange("leStyRad", "leStyRadV", "border-radius", "px");
     bindRange("leStyW", "leStyWV", "width", "%");
+    fillFontSelect();
+    var ff = document.getElementById("leStyFont");
+    if (ff) ff.addEventListener("change", function () { setStyleProp(selKeys.style, "font-family", this.value); });
     var w = document.getElementById("leStyWeight");
     if (w) w.addEventListener("change", function () { setStyleProp(selKeys.style, "font-weight", this.value); });
     var align = document.getElementById("leStyAlign");
@@ -903,14 +965,23 @@
     syncStyleModal();
     styleModal.hidden = false;
   }
+  function rgbToHex(c) {
+    var m = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?/i.exec(String(c || ""));
+    if (!m) return null;
+    if (m[4] !== undefined && parseFloat(m[4]) === 0) return null; // fully transparent
+    function h(n) { return ("0" + parseInt(n, 10).toString(16)).slice(-2); }
+    return "#" + h(m[1]) + h(m[2]) + h(m[3]);
+  }
   function syncStyleModal() {
     var m = currentStyle(selKeys.style);
-    setVal("leStyColor", m["color"] || "#222222");
-    setVal("leStyBg", m["background-color"] || "#ffffff");
-    setRange("leStyFs", "leStyFsV", m["font-size"]);
+    var cs = selEl ? (window.getComputedStyle ? getComputedStyle(selEl) : null) : null;
+    setVal("leStyColor", m["color"] || (cs && rgbToHex(cs.color)) || "#222222");
+    setVal("leStyBg", m["background-color"] || (cs && rgbToHex(cs.backgroundColor)) || "#ffffff");
+    setRange("leStyFs", "leStyFsV", m["font-size"] || (cs && cs.fontSize));
     setRange("leStyPad", "leStyPadV", m["padding"]);
     setRange("leStyRad", "leStyRadV", m["border-radius"]);
     setRange("leStyW", "leStyWV", m["width"], "auto");
+    setVal("leStyFont", m["font-family"] || "");
     setVal("leStyWeight", m["font-weight"] || "");
     var align = document.getElementById("leStyAlign");
     if (align) Array.prototype.forEach.call(align.children, function (b) {
@@ -1060,7 +1131,7 @@
       var r = await fetch(api() + "/me", { credentials: "same-origin" });
       if (r.status === 404 || r.status === 405) return { hasApi: false };
       var j = await r.json();
-      return { hasApi: true, authed: !!j.authenticated, configured: j.configured !== false };
+      return Object.assign({ hasApi: true, authed: !!j.authenticated, configured: j.configured !== false }, j);
     } catch (e) { return { hasApi: false }; }
   }
   async function publish() {
@@ -1129,13 +1200,33 @@
 
   /* ---------------- login modal ---------------- */
   function setErr(m) { var e = document.getElementById("leErr"); if (e) { e.textContent = m || ""; e.hidden = !m; } }
-  function showLogin() {
+  function showLogin(intent) {
+    loginIntent = intent || "publish";
     setErr(""); var n = document.getElementById("leMagicNote"); if (n) n.hidden = true;
+    var t = document.getElementById("leModalTitle"), s = document.getElementById("leModalSub");
+    var btn = document.getElementById("leDoLogin");
+    if (loginIntent === "publish") {
+      if (t) t.textContent = "Sign in to publish";
+      if (s) s.textContent = "Publishing makes your changes live on " + brand() + ".";
+      if (btn) btn.textContent = "Sign in & publish";
+    } else {
+      if (t) t.textContent = "Sign in to edit";
+      if (s) s.textContent = "Sign in to edit " + brand() + ". Visitors never see the editor.";
+      if (btn) btn.textContent = "Sign in";
+    }
     modal.hidden = false; var u = document.getElementById("leUser"); if (u) u.focus();
   }
   function hideLogin() { modal.hidden = true; }
   function showPreview() { if (previewModal) previewModal.hidden = false; }
   function hidePreview() { if (previewModal) previewModal.hidden = true; }
+  // After a successful sign-in, do what the user actually came to do.
+  async function afterLogin() {
+    hideLogin();
+    await refreshGate();
+    if (loginIntent === "publish") { doPublish(); }
+    else if (loginIntent === "admin") { revealEditor(); openAdmin(); }
+    else { revealEditor(); setEditing(true); }
+  }
   async function doLogin() {
     setErr("");
     try {
@@ -1149,7 +1240,7 @@
       });
       var j = {}; try { j = await r.json(); } catch (e) {}
       if (!r.ok) { setErr(j.error || "Sign in failed."); return; }
-      hideLogin(); doPublish();
+      afterLogin();
     } catch (e) { setErr("Network error. Please try again."); }
   }
   async function doMagic() {
@@ -1162,6 +1253,251 @@
       });
       document.getElementById("leMagicNote").hidden = false;
     } catch (e) { setErr("Could not send the link. Please try again."); }
+  }
+
+  /* ---------------- access gating + team/account ----------------
+     In a real (non-preview) install with requireLogin on, the launcher stays
+     hidden to the public and only appears once an editor is signed in. */
+  function val(id) { var n = document.getElementById(id); return n ? n.value : ""; }
+  function getParam(k) { try { return new URLSearchParams(location.search).get(k) || ""; } catch (e) { return ""; } }
+  function revealEditor() { if (launchBtn) launchBtn.style.display = editing ? "none" : ""; }
+
+  async function csrf(path, body, method) {
+    try {
+      var r = await fetch(api() + path, {
+        method: method || "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json", "X-Inkwell": "1" },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      var j = {}; try { j = await r.json(); } catch (e) {}
+      return { ok: r.ok, status: r.status, json: j };
+    } catch (e) { return { ok: false, status: 0, json: { error: "Network error. Please try again." } }; }
+  }
+
+  // Gating only applies to a real, configured backend (without an API there's
+  // no way to log in, so we never hide the launcher).
+  function gateEnabled() {
+    if (previewOnly()) return false;
+    if (cfg().requireLogin === false) return false; // explicit client opt-out
+    return !!(meState && meState.hasApi && meState.configured && meState.requireLogin !== false);
+  }
+  function applyGate() {
+    var teamBtn = document.getElementById("leTeam");
+    var hide = gateEnabled() && !(meState && meState.authed);
+    if (hide && editing) setEditing(false);
+    if (launchBtn) launchBtn.style.display = (hide || editing) ? "none" : "";
+    var canTeam = !!(meState && meState.authed && meState.caps && meState.caps.manageTeam);
+    if (teamBtn) teamBtn.hidden = !canTeam || previewOnly();
+  }
+  async function refreshGate() {
+    if (previewOnly()) { applyGate(); return; }
+    meState = await checkMe();
+    applyGate();
+  }
+
+  function roleBadge(role) { return '<span class="ink-admin__role ink-admin__role--' + esc(role) + '">' + esc(role) + "</span>"; }
+  async function openAdmin() {
+    adminModal.hidden = false;
+    var bodyEl = document.getElementById("leAdminBody");
+    bodyEl.textContent = "Loading\u2026";
+    var r = await csrf("/admin-users", null, "GET");
+    if (!r.ok) { bodyEl.textContent = r.json.error || "You don\u2019t have access to the team panel."; return; }
+    renderAdmin(r.json, bodyEl);
+  }
+  function renderAdmin(data, bodyEl) {
+    var me = data.me || {};
+    var html = '<div class="ink-admin__sec"><h3>People</h3><div class="ink-admin__list">';
+    (data.users || []).forEach(function (u) {
+      var manageable = data.canManage && u.source === "store" && u.role !== "owner" && u.id !== me.id;
+      html += '<div class="ink-admin__row">' +
+        '<div class="ink-admin__who"><b>' + esc(u.username) + "</b>" +
+          (u.email ? "<span>" + esc(u.email) + "</span>" : "") +
+          (u.status === "invited" ? '<em class="ink-admin__pend">invited</em>' : "") +
+        "</div>";
+      if (manageable) {
+        html += '<select class="ink-admin__rolesel" data-uid="' + esc(u.id) + '">' +
+          '<option value="editor"' + (u.role === "editor" ? " selected" : "") + ">editor</option>" +
+          '<option value="admin"' + (u.role === "admin" ? " selected" : "") + ">admin</option></select>" +
+          '<button type="button" class="ink-btn ink-btn--sm ink-admin__rm" data-uid="' + esc(u.id) + '">Remove</button>';
+      } else {
+        html += roleBadge(u.role) + (u.source === "env" ? '<span class="ink-admin__src">env</span>' : "");
+      }
+      html += "</div>";
+    });
+    html += "</div>";
+    if (data.canManage) {
+      var sendLabel = data.emailReady ? "Send invite" : "Create invite link";
+      var hint = data.emailReady
+        ? "They\u2019ll get an email to set a password and start editing."
+        : "No email is set up (INK_RESEND_API_KEY), so you\u2019ll get a one-time link to copy and send them yourself.";
+      html += '<div class="ink-admin__invite"><h4>Invite a teammate</h4>' +
+        '<div class="ink-admin__inviteform">' +
+        '<input id="leInvUser" placeholder="username" maxlength="100" autocomplete="off">' +
+        '<input id="leInvEmail" type="email" placeholder="email" maxlength="200" autocomplete="off">' +
+        '<select id="leInvRole"><option value="editor">editor</option><option value="admin">admin</option></select>' +
+        '<button type="button" class="ink-btn ink-btn--primary" id="leInvSend">' + sendLabel + '</button>' +
+        '</div><div class="ink-modal__err" id="leInvErr" hidden></div>';
+      if (lastInvite) {
+        html += '<div class="ink-admin__invlink">' +
+          '<p>Invite link for <b>' + esc(lastInvite.user) + '</b> \u2014 copy and send it. It works once and expires.</p>' +
+          '<div class="ink-admin__copyrow">' +
+          '<input id="leInvLinkInput" readonly value="' + esc(lastInvite.link) + '">' +
+          '<button type="button" class="ink-btn ink-btn--primary" id="leInvCopy">Copy</button>' +
+          '</div></div>';
+      }
+      html += '<p class="ink-admin__hint">' + hint + '</p></div>';
+    } else if (me.role === "owner") {
+      html += '<p class="ink-admin__note">Adding teammates needs a durable store. On a self-hosted Node server set <code>INK_DATA_DIR</code>; on Vercel/Netlify add a free Upstash store (<code>INK_UPSTASH_REDIS_REST_URL</code> + <code>INK_UPSTASH_REDIS_REST_TOKEN</code>), then redeploy.</p>';
+    } else {
+      html += '<p class="ink-admin__note">Inviting teammates isn\u2019t enabled on this site yet. Ask the site owner to turn on team management.</p>';
+    }
+    html += "</div>";
+    if (me.role === "owner") {
+      html += '<div class="ink-admin__sec"><h3>Setup check</h3>' +
+        '<p class="ink-admin__hint">Verify this install is wired up correctly (storage, team store, email, env-var names).</p>' +
+        '<button type="button" class="ink-btn" id="leDiag">Run setup check</button>' +
+        '<div class="ink-admin__diag" id="leDiagOut" hidden></div></div>';
+    }
+    html += '<div class="ink-admin__sec"><h3>Your account</h3>' +
+      '<p class="ink-admin__you">Signed in as <b>' + esc(me.username || "") + "</b> " + roleBadge(me.role || "editor") + "</p>";
+    if (me.source === "store") {
+      html += '<div class="ink-admin__pw">' +
+        '<input id="lePwCur" type="password" autocomplete="current-password" placeholder="current password">' +
+        '<input id="lePwNext" type="password" autocomplete="new-password" placeholder="new password (8+ chars)">' +
+        '<button type="button" class="ink-btn" id="lePwChange">Change password</button>' +
+        '</div><div class="ink-modal__err" id="lePwChErr" hidden></div>';
+    } else {
+      html += '<p class="ink-admin__hint">This account is configured via environment variables; change its password there.</p>';
+    }
+    html += '<button type="button" class="ink-btn ink-admin__signout" id="leSignout">Sign out</button></div>';
+    bodyEl.innerHTML = html;
+    wireAdmin(bodyEl);
+  }
+  function wireAdmin(bodyEl) {
+    var inv = bodyEl.querySelector("#leInvSend");
+    if (inv) inv.addEventListener("click", doInvite);
+    var cp = bodyEl.querySelector("#leInvCopy");
+    if (cp) cp.addEventListener("click", function () {
+      var inp = bodyEl.querySelector("#leInvLinkInput");
+      copyText(inp ? inp.value : "");
+    });
+    var diag = bodyEl.querySelector("#leDiag");
+    if (diag) diag.addEventListener("click", function () { runDiagnostics(bodyEl); });
+    Array.prototype.forEach.call(bodyEl.querySelectorAll(".ink-admin__rolesel"), function (sel) {
+      sel.addEventListener("change", function () { doRole(sel.getAttribute("data-uid"), sel.value); });
+    });
+    Array.prototype.forEach.call(bodyEl.querySelectorAll(".ink-admin__rm"), function (btn) {
+      btn.addEventListener("click", function () { doRemove(btn.getAttribute("data-uid")); });
+    });
+    var pw = bodyEl.querySelector("#lePwChange");
+    if (pw) pw.addEventListener("click", doChangePassword);
+    var so = bodyEl.querySelector("#leSignout");
+    if (so) so.addEventListener("click", doSignOut);
+  }
+  async function doInvite() {
+    var errEl = document.getElementById("leInvErr");
+    function ie(m) { if (errEl) { errEl.textContent = m; errEl.hidden = !m; } }
+    ie("");
+    var who = val("leInvUser");
+    var r = await csrf("/admin-users", { username: who, email: val("leInvEmail"), role: val("leInvRole") });
+    if (!r.ok) { ie(r.json.error || "Couldn\u2019t create the invite."); return; }
+    if (r.json.inviteLink) {
+      lastInvite = { link: r.json.inviteLink, user: who };
+      showToast("Invite created \u2014 copy the link below.", 4000);
+    } else {
+      lastInvite = null;
+      showToast("Invite sent to " + val("leInvEmail") + ".", 4000);
+    }
+    openAdmin();
+  }
+  async function runDiagnostics(bodyEl) {
+    var out = bodyEl.querySelector("#leDiagOut");
+    if (!out) return;
+    out.hidden = false; out.innerHTML = "Checking\u2026";
+    var r = await csrf("/diagnostics", null, "GET");
+    if (!r.ok) { out.textContent = (r.json && r.json.error) || "Couldn\u2019t run the setup check."; return; }
+    var s = r.json.summary || {};
+    var icon = { ok: "\u2713", warn: "\u26A0", error: "\u2717", info: "\u2022" };
+    var parts = [];
+    if (s.error) parts.push(s.error + " error(s)");
+    if (s.warn) parts.push(s.warn + " warning(s)");
+    parts.push((s.ok || 0) + " ok");
+    var html = '<div class="ink-diag__sum">' + esc(parts.join(" \u00b7 ")) + "</div>";
+    (r.json.checks || []).forEach(function (c) {
+      html += '<div class="ink-diag__row ink-diag__row--' + esc(c.level) + '">' +
+        '<span class="ink-diag__i">' + (icon[c.level] || "\u2022") + '</span>' +
+        '<span class="ink-diag__lbl">' + esc(c.label) + "</span>" +
+        '<span class="ink-diag__d">' + esc(c.detail) + "</span></div>";
+    });
+    out.innerHTML = html;
+  }
+  function copyText(t) {
+    if (!t) return;
+    function done() { showToast("Link copied.", 2500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done, function () { fallbackCopy(t, done); });
+    } else { fallbackCopy(t, done); }
+  }
+  function fallbackCopy(t, done) {
+    var ta = document.createElement("textarea");
+    ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  async function doRole(id, role) {
+    var r = await csrf("/admin-user", { action: "role", id: id, role: role });
+    if (!r.ok) { showToast(r.json.error || "Couldn\u2019t update the role.", 4000); }
+    openAdmin();
+  }
+  async function doRemove(id) {
+    if (!window.confirm("Remove this teammate\u2019s access?")) return;
+    var r = await csrf("/admin-user", { action: "remove", id: id });
+    if (!r.ok) showToast(r.json.error || "Couldn\u2019t remove that account.", 4000);
+    openAdmin();
+  }
+  async function doChangePassword() {
+    var errEl = document.getElementById("lePwChErr");
+    function pe(m) { if (errEl) { errEl.textContent = m; errEl.hidden = !m; } }
+    pe("");
+    var next = val("lePwNext");
+    if ((next || "").length < 8) { pe("New password must be at least 8 characters."); return; }
+    var r = await csrf("/account-password", { current: val("lePwCur"), next: next });
+    if (!r.ok) { pe(r.json.error || "Couldn\u2019t change the password."); return; }
+    showToast("Password changed.", 4000);
+    openAdmin();
+  }
+  async function doSignOut() {
+    await csrf("/logout", {});
+    adminModal.hidden = true; lastInvite = null;
+    if (editing) setEditing(false);
+    meState = null;
+    await refreshGate();
+    showToast("Signed out.", 3000);
+  }
+
+  function openPwModal(mode, token) {
+    pwMode = mode; pwToken = token || "";
+    var t = document.getElementById("lePwTitle"), s = document.getElementById("lePwSub");
+    if (mode === "reset") { if (t) t.textContent = "Set a new password"; if (s) s.textContent = "Choose a new password for your account."; }
+    else { if (t) t.textContent = "Set your password"; if (s) s.textContent = "Choose a password to finish setting up your account."; }
+    var e = document.getElementById("lePwErr"); if (e) e.hidden = true;
+    setVal("lePwNew", ""); setVal("lePwNew2", "");
+    pwModal.hidden = false; var n = document.getElementById("lePwNew"); if (n) n.focus();
+  }
+  async function submitPw() {
+    var errEl = document.getElementById("lePwErr");
+    function pe(m) { if (errEl) { errEl.textContent = m; errEl.hidden = !m; } }
+    pe("");
+    var p1 = val("lePwNew"), p2 = val("lePwNew2");
+    if (p1.length < 8) { pe("Password must be at least 8 characters."); return; }
+    if (p1 !== p2) { pe("Those passwords don\u2019t match."); return; }
+    var r = await csrf(pwMode === "reset" ? "/reset" : "/invite-accept", { token: pwToken, password: p1 });
+    if (!r.ok) { pe(r.json.error || "That link is invalid or has expired."); return; }
+    pwModal.hidden = true;
+    await refreshGate();
+    revealEditor(); setEditing(true);
+    showToast("You\u2019re all set \u2014 you\u2019re signed in.", 5000);
   }
 
   /* ---------------- reset ---------------- */
@@ -1334,12 +1670,30 @@
     if (histBtn) histBtn.addEventListener("click", function (e) { e.preventDefault(); openHistory(); });
     document.getElementById("leHistClose").addEventListener("click", function () { historyModal.hidden = true; });
     historyModal.addEventListener("click", function (e) { if (e.target === historyModal) historyModal.hidden = true; });
-    // Reveal History only when a real, configured backend exists (it needs Git).
-    if (!previewOnly()) {
-      checkMe().then(function (s) {
-        if (s.hasApi && s.configured && histBtn) histBtn.hidden = false;
-      });
-    }
+
+    // Team / account panel + set-password modal wiring.
+    var teamBtn = document.getElementById("leTeam");
+    if (teamBtn) teamBtn.addEventListener("click", function (e) { e.preventDefault(); openAdmin(); });
+    document.getElementById("leAdminClose").addEventListener("click", function () { adminModal.hidden = true; lastInvite = null; });
+    adminModal.addEventListener("click", function (e) { if (e.target === adminModal) { adminModal.hidden = true; lastInvite = null; } });
+    document.getElementById("lePwClose").addEventListener("click", function () { pwModal.hidden = true; });
+    pwModal.addEventListener("click", function (e) { if (e.target === pwModal) pwModal.hidden = true; });
+    document.getElementById("lePwSubmit").addEventListener("click", submitPw);
+
+    // Hide the launcher up front in a gated install so the public never sees a
+    // flash of "Edit this page" before /api/me resolves.
+    if (!previewOnly() && cfg().requireLogin !== false && launchBtn) launchBtn.style.display = "none";
+
+    // Always-available editor entry for a gated install: Ctrl/Cmd+Shift+E opens
+    // sign-in (or the launcher/team panel if already signed in). This means an
+    // editor is never locked out even if they forget the /?le=login URL.
+    document.addEventListener("keydown", function (e) {
+      if (!(e.shiftKey && (e.ctrlKey || e.metaKey) && (e.key === "E" || e.key === "e"))) return;
+      if (previewOnly() || editing) return;
+      e.preventDefault();
+      if (meState && meState.authed) { revealEditor(); setEditing(true); }
+      else showLogin("edit");
+    });
     var seoTitleI = document.getElementById("leSeoTitleI"), seoDescI = document.getElementById("leSeoDescI");
     seoTitleI.addEventListener("input", function () { setSeo("title", this.value); syncSeoPreview(); });
     seoDescI.addEventListener("input", function () { setSeo("description", this.value); syncSeoPreview(); });
@@ -1379,10 +1733,50 @@
       previewModal.addEventListener("click", function (e) { if (e.target === previewModal) hidePreview(); });
     }
 
-    if (/[?&]le=signedin/.test(location.search)) {
-      setEditing(true);
-      showToast("You're signed in. Make your edits, then press Publish.", 6500);
+    bootstrap();
+  }
+
+  // Resolve auth state, gate the launcher, reveal admin-only affordances, and
+  // handle deep-link entry points (login / invite / reset / admin).
+  // Remove le=* and token from the address bar/history so invite/reset tokens
+  // (and the deep-link params) don't linger where they could leak via referrer.
+  function scrubUrl() {
+    try {
+      var u = new URL(location.href);
+      if (u.searchParams.has("le") || u.searchParams.has("token")) {
+        u.searchParams.delete("le"); u.searchParams.delete("token");
+        history.replaceState({}, "", u.pathname + (u.search ? u.search : "") + u.hash);
+      }
+    } catch (e) {}
+  }
+  async function bootstrap() {
+    var q = location.search;
+    // Invite/reset set-password pages don't require an existing session.
+    if (/[?&]le=invite/.test(q)) { openPwModal("invite", getParam("token")); scrubUrl(); }
+    else if (/[?&]le=reset/.test(q)) { openPwModal("reset", getParam("token")); scrubUrl(); }
+
+    // The admin/login deep links must work even on an open (previewOnly) demo,
+    // so the owner can always sign in and reach the Team panel. Gating itself
+    // still stays off for preview (the public launcher remains visible).
+    var authDeepLink = /[?&]le=(login|admin|signedin)/.test(q);
+    if (previewOnly() && !authDeepLink) { applyGate(); return; }
+
+    await refreshGate();
+    // History/restore rewrites the whole site, so it's an admin/owner action.
+    var histBtn = document.getElementById("leHistory");
+    var canRevert = !!(meState && meState.caps && meState.caps.revert);
+    if (meState && meState.hasApi && meState.configured && histBtn) histBtn.hidden = !canRevert;
+
+    if (/[?&]le=signedin/.test(q)) {
+      revealEditor(); setEditing(true);
+      showToast("You\u2019re signed in. Make your edits, then press Publish.", 6500);
+    } else if (/[?&]le=login/.test(q) && !(meState && meState.authed)) {
+      showLogin("edit");
+    } else if (/[?&]le=admin/.test(q)) {
+      if (meState && meState.authed) { revealEditor(); openAdmin(); }
+      else { showLogin("admin"); }
     }
+    if (/[?&]le=/.test(q)) scrubUrl();
   }
 
   if (cfg().inline === false) return; // studio-only target site: skip the toolbar
