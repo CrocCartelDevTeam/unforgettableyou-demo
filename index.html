@@ -40,7 +40,7 @@
       <a href="#herstory" class="nav__link" data-i18n="nav.herstory">Her Story</a>
       <a href="#travel" class="nav__link" data-i18n="nav.travel">Travels</a>
       <a href="#album" class="nav__link" data-i18n="nav.gallery">Album</a>
-      <a href="#contact" class="nav__link nav__link--cta" data-i18n="nav.cta">Preserve a Story</a>
+      <a href="#family" class="nav__link nav__link--cta" data-i18n="nav.cta">Add a Memory</a>
       <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">
         <span class="lang-toggle__opt" data-lang="en">EN</span>
         <span class="lang-toggle__sep">/</span>
@@ -295,7 +295,7 @@
             A full life of family, grandchildren, and love still waits to be written
             here — chapter by chapter, in his own voice.
           </p>
-          <a href="#contact" class="chapter__cta" data-i18n="mem.cta">Help preserve the next chapter →</a>
+          <a href="#family" class="chapter__cta" data-i18n="mem.cta">Share a memory →</a>
         </div>
       </article>
     </div>
@@ -363,7 +363,7 @@
             There is so much more of her story to tell. Add each memory here, in her
             own voice, one chapter at a time.
           </p>
-          <a href="#contact" class="chapter__cta" data-i18n="her.cta">Help preserve her story →</a>
+          <a href="#family" class="chapter__cta" data-i18n="her.cta">Share a memory →</a>
         </div>
       </article>
     </div>
@@ -481,42 +481,44 @@
     </div>
   </section>
 
-  <!-- CTA / Contact -->
-  <section class="cta section" id="contact">
+  <!-- For the Family -->
+  <style>
+    .fam__wall{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:14px}
+    .fam__note{padding:16px 18px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(0,0,0,.06);box-shadow:0 6px 18px rgba(0,0,0,.05)}
+    .fam__note p{margin:0 0 8px;font-style:italic;line-height:1.55}
+    .fam__by{display:block;font-size:.9rem;opacity:.7}
+    .fam__hint{opacity:.78;font-size:.92rem;margin:0}
+  </style>
+  <section class="cta section" id="family">
     <div class="cta__inner">
       <div class="cta__text reveal">
-        <span class="section__kicker" data-i18n="cta.kicker">For Families &amp; Storytellers</span>
-        <h2 class="section__title" data-i18n="cta.title">Preserve a Story That Lasts Forever</h2>
-        <p class="cta__lede" data-i18n="cta.lede">
-          Every family has an unforgettable story. We turn memories, letters, and
-          photographs into a beautiful, living digital keepsake — designed with care,
-          built to last, and ready to share with generations to come.
+        <span class="section__kicker" data-i18n="fam.kicker">For the Family</span>
+        <h2 class="section__title" data-i18n="fam.title">A Living Keepsake</h2>
+        <p class="cta__lede" data-i18n="fam.lede">
+          This story belongs to all of us. It's here to be read, remembered, and
+          added to — so everyone who loves Racheli &amp; Zvika can keep their
+          memories close, and pass them on.
         </p>
-        <ul class="cta__features">
-          <li data-i18n="cta.f1">Elegant, fully custom design</li>
-          <li data-i18n="cta.f2">Interactive timelines &amp; chapters</li>
-          <li data-i18n="cta.f3">Photo &amp; video galleries</li>
-          <li data-i18n="cta.f4">Private or public sharing</li>
-        </ul>
       </div>
 
-      <form class="cta__form reveal" style="--d:.15s" id="contactForm" novalidate>
-        <h3 class="cta__form-title" data-i18n="cta.formTitle">Start the Conversation</h3>
-        <div class="field">
-          <input type="text" id="name" name="name" required placeholder=" " />
-          <label for="name" data-i18n="cta.name">Your name</label>
-        </div>
-        <div class="field">
-          <input type="email" id="email" name="email" required placeholder=" " />
-          <label for="email" data-i18n="cta.email">Email address</label>
-        </div>
-        <div class="field">
-          <textarea id="message" name="message" rows="4" placeholder=" "></textarea>
-          <label for="message" data-i18n="cta.msg">Tell us about the story you'd like to preserve</label>
-        </div>
-        <button type="submit" class="btn btn--solid btn--block" data-i18n="cta.send">Send Inquiry</button>
-        <p class="cta__form-note" id="formNote" hidden data-i18n="cta.note">Thank you — we'll be in touch shortly. ♥</p>
-      </form>
+      <div class="cta__form reveal" style="--d:.15s">
+        <h3 class="cta__form-title" data-i18n="fam.wallTitle">A Wall of Love</h3>
+        <ul class="fam__wall">
+          <li class="fam__note">
+            <p data-i18n="fam.note1">"Sixty years together, and still the best love story we know. Thank you for showing us how it's done."</p>
+            <span class="fam__by" data-i18n="fam.note1by">— Your children</span>
+          </li>
+          <li class="fam__note">
+            <p data-i18n="fam.note2">"Saba and Savta, every holiday around your table is a memory we'll keep forever."</p>
+            <span class="fam__by" data-i18n="fam.note2by">— Your grandchildren</span>
+          </li>
+          <li class="fam__note">
+            <p data-i18n="fam.note3">"To the two people who built this beautiful family — we love you more than words can say."</p>
+            <span class="fam__by" data-i18n="fam.note3by">— All of us</span>
+          </li>
+        </ul>
+        <p class="cta__form-note fam__hint" data-i18n="fam.hint">When the time comes, loved ones can add their own memories here — just click and type.</p>
+      </div>
     </div>
   </section>
 
@@ -534,7 +536,7 @@
         <a href="#herstory" data-i18n="nav.herstory">Her Story</a>
         <a href="#travel" data-i18n="nav.travel">Travels</a>
         <a href="#album" data-i18n="nav.gallery">Album</a>
-        <a href="#contact" data-i18n="nav.contact">Contact</a>
+        <a href="#family" data-i18n="nav.contact">For the Family</a>
       </nav>
     </div>
     <div class="footer__bottom">

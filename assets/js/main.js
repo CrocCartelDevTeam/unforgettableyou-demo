@@ -65,19 +65,6 @@
     }, { passive: true });
   }
 
-  /* ---- Contact form (demo handler) ---- */
-  var form = document.getElementById("contactForm");
-  var note = document.getElementById("formNote");
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      if (note) note.hidden = false;
-      var dict = (window.UY_I18N && window.UY_I18N.dict[window.UY_LANG]) || {};
-      form.querySelector("button[type=submit]").textContent = dict["cta.sent"] || "Sent";
-      setTimeout(function () { form.reset(); }, 400);
-    });
-  }
 
   /* =========================================================
      WebGL hero — a slow, flowing "golden nebula" shader.
