@@ -547,15 +547,24 @@
   <script src="assets/js/main.js"></script>
 
   <!-- Editor selection:
-       Default visitors get the built-in editor. Add ?inkwell=1 to the URL to
-       live-test the standalone Inkwell product instead (drives the SAME /api,
-       so Publish really commits). This block is fully reversible. -->
+       Inkwell (our own live-editing platform, included in the package) is the
+       default editor. Add ?classic=1 to fall back to the original built-in editor.
+       On GitHub Pages there is no backend, so Inkwell runs in PREVIEW mode:
+       full hands-on editing, no login, and "Publish" explains the real flow.
+       Once the site is on its production host (Vercel), live publishing turns on
+       automatically. This block is fully reversible. -->
   <script>
     (function () {
-      var useInkwell = /[?&]inkwell=1/.test(location.search);
       function add(src) { var s = document.createElement("script"); s.src = src; document.body.appendChild(s); return s; }
 
-      if (!useInkwell) { add("assets/js/edit-mode.js"); return; }
+      // Fallback to the original editor on demand.
+      if (/[?&]classic=1/.test(location.search)) { add("assets/js/edit-mode.js"); return; }
+
+      // Preview mode whenever there's no real backend (e.g. GitHub Pages / file://).
+      // ?live=1 forces the real publish flow; ?preview=1 forces preview.
+      var qp = location.search;
+      var preview = /[?&]live=1/.test(qp) ? false
+        : (/[?&]preview=1/.test(qp) || /github\.io$/i.test(location.hostname) || location.protocol === "file:");
 
       // Hide host photo placeholders once Inkwell paints a draft photo.
       var st = document.createElement("style");
@@ -572,8 +581,11 @@
         editAttribute: "data-i18n",   // bind to Unforgettable You's existing markup
         photoAttribute: "data-photo",
         manageContent: false,          // i18n.js already renders published content
+        excludeSelector: ".nav, .footer", // keep the menu & footer safe from edits
         brandName: "Unforgettable You",
-        launchLabel: "Edit with Inkwell",
+        launchLabel: "Edit your story",
+        previewOnly: preview,
+        publishLabel: "How publishing works",
         getLang: function () { return window.UY_LANG || "en"; }
       };
 
