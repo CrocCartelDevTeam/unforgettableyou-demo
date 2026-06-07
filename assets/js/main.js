@@ -103,22 +103,22 @@
       "void main(){",
       "  vec2 uv=gl_FragCoord.xy/u_res.xy;",
       "  vec2 p=uv; p.x*=u_res.x/u_res.y;",
-      "  float t=u_time*0.025;",
-      "  vec2 m=(u_mouse-0.5)*0.25;",
-      "  vec2 q=vec2(fbm(p+t+m), fbm(p+vec2(5.2,1.3)-t));",
-      "  float n=fbm(p+q*1.6+m);",
-      "  float n2=fbm(p*1.7-t*0.6);",
-      "  vec3 navy=vec3(0.043,0.071,0.129);",
-      "  vec3 navy2=vec3(0.094,0.129,0.212);",
-      "  vec3 gold=vec3(0.69,0.553,0.341);",
-      "  vec3 rose=vec3(0.71,0.455,0.42);",
-      "  vec3 col=mix(navy,navy2,smoothstep(0.15,0.85,n));",
-      "  col=mix(col,gold,smoothstep(0.55,0.98,n)*0.55);",
-      "  col=mix(col,rose,smoothstep(0.62,1.0,n2)*0.20);",
-      "  float spark=pow(fbm(p*3.0+t*1.5),6.0)*0.7;",
-      "  col+=gold*spark;",
-      "  float v=smoothstep(1.25,0.25,length(uv-0.5));",
-      "  col*=0.55+0.45*v;",
+      "  float t=u_time*0.018;",            // slow, drifting clouds
+      "  vec2 m=(u_mouse-0.5)*0.15;",
+      "  vec2 q=vec2(fbm(p*1.4+t+m), fbm(p*1.4+vec2(3.0,1.7)-t));",
+      "  float n=fbm(p*1.4+q*1.8+m);",
+      "  float n2=fbm(p*2.4-t*0.5+q);",
+      "  vec3 skyTop=vec3(0.36,0.62,0.86);",   // azure overhead
+      "  vec3 skyBot=vec3(0.78,0.89,0.96);",   // pale near the horizon
+      "  vec3 sky=mix(skyBot,skyTop,clamp(uv.y,0.0,1.0));",
+      "  vec3 cloudLit=vec3(1.0,1.0,1.0);",
+      "  vec3 cloudShade=vec3(0.80,0.85,0.93);", // soft underside
+      "  vec3 cc=mix(cloudShade,cloudLit,smoothstep(0.45,1.0,n2));",
+      "  float cloud=smoothstep(0.46,0.92,n);",
+      "  vec3 col=mix(sky,cc,cloud);",
+      "  float sun=smoothstep(0.7,0.0,length(uv-vec2(0.8,0.86)));", // warm glow, upper-right
+      "  col+=vec3(1.0,0.95,0.82)*sun*0.16;",
+      "  col*=0.97+0.03*smoothstep(1.3,0.2,length(uv-0.5));", // keep it bright (no dark vignette)
       "  gl_FragColor=vec4(col,1.0);",
       "}"
     ].join("\n");
