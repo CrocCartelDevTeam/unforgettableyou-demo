@@ -105,20 +105,20 @@
       "  vec2 p=uv; p.x*=u_res.x/u_res.y;",
       "  float t=u_time*0.018;",            // slow, drifting clouds
       "  vec2 m=(u_mouse-0.5)*0.15;",
-      "  vec2 q=vec2(fbm(p*1.4+t+m), fbm(p*1.4+vec2(3.0,1.7)-t));",
-      "  float n=fbm(p*1.4+q*1.8+m);",
-      "  float n2=fbm(p*2.4-t*0.5+q);",
-      "  vec3 skyTop=vec3(0.36,0.62,0.86);",   // azure overhead
-      "  vec3 skyBot=vec3(0.78,0.89,0.96);",   // pale near the horizon
+      "  vec2 q=vec2(fbm(p*1.1+t+m), fbm(p*1.1+vec2(3.0,1.7)-t));",
+      "  float n=fbm(p*1.1+q*2.0+m);",
+      "  float n2=fbm(p*2.2-t*0.5+q);",
+      "  vec3 skyTop=vec3(0.094,0.286,0.545);",  // deep azure overhead
+      "  vec3 skyBot=vec3(0.286,0.494,0.745);",  // medium blue near the horizon
       "  vec3 sky=mix(skyBot,skyTop,clamp(uv.y,0.0,1.0));",
       "  vec3 cloudLit=vec3(1.0,1.0,1.0);",
-      "  vec3 cloudShade=vec3(0.80,0.85,0.93);", // soft underside
-      "  vec3 cc=mix(cloudShade,cloudLit,smoothstep(0.45,1.0,n2));",
-      "  float cloud=smoothstep(0.46,0.92,n);",
+      "  vec3 cloudShade=vec3(0.60,0.69,0.84);", // cool bluish underside
+      "  vec3 cc=mix(cloudShade,cloudLit,smoothstep(0.4,1.0,n2));",
+      "  float cloud=smoothstep(0.33,0.70,n);",  // lower threshold + sharper edge => clouds clearly visible
       "  vec3 col=mix(sky,cc,cloud);",
-      "  float sun=smoothstep(0.7,0.0,length(uv-vec2(0.8,0.86)));", // warm glow, upper-right
-      "  col+=vec3(1.0,0.95,0.82)*sun*0.16;",
-      "  col*=0.97+0.03*smoothstep(1.3,0.2,length(uv-0.5));", // keep it bright (no dark vignette)
+      "  float sun=smoothstep(0.65,0.0,length(uv-vec2(0.82,0.88)));", // warm glow, upper-right
+      "  col+=vec3(1.0,0.96,0.85)*sun*0.14;",
+      "  col*=0.96+0.04*smoothstep(1.3,0.2,length(uv-0.5));",
       "  gl_FragColor=vec4(col,1.0);",
       "}"
     ].join("\n");
