@@ -31,7 +31,14 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+/* Base type size — bumped for comfortable reading (every rem scales from here).
+   ~18px on desktop, easing to ~17px on small phones so nothing overflows. */
+html {
+  font-size: 112.5%;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+@media (max-width: 600px) { html { font-size: 106.25%; } }
 
 body {
   font-family: var(--sans);
