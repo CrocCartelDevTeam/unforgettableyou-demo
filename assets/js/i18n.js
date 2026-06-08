@@ -109,7 +109,7 @@
 
       "ph.addPhoto": "Add your photo",
       "ph.here": "Your photo here",
-      "cap.firstPhoto": "Their first photograph together",
+      "cap.firstPhoto": "Racheli & Zvika",
       "cap.telaviv": "Tel Aviv, 2012",
       "cap.besor": "The Besor River",
       "cap.london": "London, June 2012",
@@ -226,7 +226,7 @@
 
       "ph.addPhoto": "הוסיפו תמונה",
       "ph.here": "התמונה שלכם כאן",
-      "cap.firstPhoto": "התצלום הראשון שלהם יחד",
+      "cap.firstPhoto": "רחלי וצביקה",
       "cap.telaviv": "תל אביב, 2012",
       "cap.besor": "נחל הבשור",
       "cap.london": "לונדון, יוני 2012",
