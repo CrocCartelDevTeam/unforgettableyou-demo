@@ -245,13 +245,21 @@
 
   var STORAGE_KEY = "uy_lang";
 
-  /* Photo precedence: the editor's local working copy, then published, then none. */
+  /* Photos shipped with the site. Lowest precedence — a published or locally
+     edited photo for the same key always wins, so these are just the defaults. */
+  var DEFAULT_PHOTOS = {
+    story1: "assets/img/together.jpg"
+  };
+
+  /* Photo precedence: editor's local working copy, then published, then default. */
   function applyPhotos() {
     var local = window.UY_PHOTOS || {};
     var pub = window.UY_PUBLISHED_PHOTOS || {};
     document.querySelectorAll("[data-photo]").forEach(function (el) {
       var k = el.getAttribute("data-photo");
-      var src = (local[k] != null) ? local[k] : pub[k];
+      var src = (local[k] != null) ? local[k]
+              : (pub[k] != null) ? pub[k]
+              : DEFAULT_PHOTOS[k];
       if (src) {
         el.style.backgroundImage = "url(" + src + ")";
         el.classList.add("has-photo");
