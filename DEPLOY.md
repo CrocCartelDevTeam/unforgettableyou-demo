@@ -52,18 +52,44 @@ UY_USERS=[{"username":"racheli","email":"...","salt":"...","hash":"..."},{"usern
 
 ## How publishing works
 
-1. Owner clicks **Try editing this site → Publish changes**.
+The site uses **Inkwell** (our live-editing platform) as its editor. On a static
+preview (e.g. GitHub Pages) it runs in preview mode — edits stay in the browser.
+Once on Vercel with the env below, publishing goes live:
+
+1. Owner clicks **Edit your story** (bottom-right) → makes edits → **Publish**.
 2. They sign in (username/password, or a magic email link).
 3. `/api/publish` validates the session and commits:
    - `content/overrides.json` — edited text (English + Hebrew)
    - `content/photos.json` — photo map
    - `uploads/…` — any newly uploaded images
-4. Vercel redeploys; the site loads the committed content for all visitors.
+4. Vercel redeploys; `i18n.js` loads the committed `content/*.json` and shows the
+   edits to all visitors (~1 minute).
 5. Every edit is a git commit → full version history / easy rollback.
 
+### What publishes live today vs. later
+- **Live now (Stage 1):** editing and publishing **text** (EN/HE) and **photos** —
+  the couple's day-to-day needs. This loop is fully wired.
+- **Stage 2 (recommended next):** swap the hand-built `/api` for **Inkwell's full
+  server** so the editor's richer features also persist — styling/fonts, PDFs,
+  self-hosted video/audio, video embeds, and **version history / restore**
+  (`/api/history`, `/api/revert`). Until then those extras work in the editor but
+  aren't saved on Publish, and the History button is hidden/no-op.
+- **Stage 3 (as the content grows):** split the long memoir into real pages
+  (His Story, Her Story, Travel Diary, Photo Album, per-chapter pages) with shared
+  nav/footer — see the roadmap below.
+
+## Launch stages
+
+1. **Go live (Stage 1).** Import to Vercel, add env vars, point the domain. The
+   site is live; the owners can edit text + photos and publish.
+2. **Full editor (Stage 2).** Vendor Inkwell's server into `/api` so every editor
+   feature persists, plus version history. No visible change for visitors.
+3. **Multi-page (Stage 3).** As the customer's material lands, break content into
+   pages with a shared layout and a generated menu. Inkwell edits each page in place.
+
 ## Notes
-- On hosts without the API (e.g. a GitHub Pages preview), Edit Mode still works
-  locally and **Export** downloads the edits; the **Publish** button explains that
+- On hosts without the API (e.g. a GitHub Pages preview), editing still works
+  locally (edits stay in the browser); the **Publish** button explains that
   publishing turns on once the site is on Vercel.
 - Photos are stored in the repo under `uploads/`. For very photo-heavy use, switch
   to a blob store (Vercel Blob / Cloudflare R2) later — the publish function is the
